@@ -9,9 +9,12 @@ import (
 )
 
 type App struct {
-	Address string
-	Static  string
-	Log     string
+	Address      string
+	Static       string
+	Log          string
+	Mode         string
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
 }
 
 type Db struct {

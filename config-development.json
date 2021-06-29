@@ -1,0 +1,24 @@
+{
+  "App": {
+    "Address": "127.0.0.1:8989",
+    "Static": "public",
+    "Log": "logs",
+    "Mode": "debug",
+    "ReadTimeout": 10,
+    "WriteTimeout": 10
+  },
+  "Db": {
+    "Driver": "",
+    "Address": "",
+    "Database": "",
+    "User": "",
+    "Password": ".",
+    "MaxConnections": 100,
+    "MaxIdeConnections": 25,
+    "ConnectionMaxLifeTime": 5
+  },
+  "Pagination": {
+    "PerPage": 10,
+    "UrlQuery": "page"
+  }
+}

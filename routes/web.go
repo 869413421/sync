@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	. "sync/app/http/controllers"
 )
 
 type Router struct {
@@ -11,6 +12,8 @@ type Router struct {
 	Handle  gin.HandlerFunc
 }
 
+var userController = NewUserController()
+
 type WebRouters []Router
 
 var Routes = WebRouters{
@@ -18,19 +21,7 @@ var Routes = WebRouters{
 		Name:    "index",
 		Method:  "get",
 		Pattern: "/",
-		Handle: func(context *gin.Context) {
-			type Result struct {
-				Name  string
-				Email string
-			}
-
-			var result = Result{
-				Email: "13528685024@163.com",
-				Name:  "小明",
-			}
-
-			context.JSON(200, result)
-		},
+		Handle:  userController.Index,
 	},
 }
 
