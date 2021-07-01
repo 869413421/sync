@@ -20,5 +20,9 @@
   "Pagination": {
     "PerPage": 10,
     "UrlQuery": "page"
+  },
+  "Jwt": {
+    "Secret": "",
+    "ExpireTime": 86400
   }
 }

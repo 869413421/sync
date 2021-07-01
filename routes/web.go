@@ -13,6 +13,7 @@ type Router struct {
 }
 
 var userController = NewUserController()
+var authController = NewAuthController()
 
 type WebRouters []Router
 
@@ -22,6 +23,12 @@ var Routes = WebRouters{
 		Method:  "get",
 		Pattern: "/",
 		Handle:  userController.Index,
+	},
+	{
+		Name:    "login",
+		Method:  "post",
+		Pattern: "/login",
+		Handle:  authController.Login,
 	},
 }
 
