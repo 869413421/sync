@@ -33,10 +33,16 @@ type Pagination struct {
 	UrlQuery string
 }
 
+type Jwt struct {
+	Secret     string
+	ExpireTime time.Duration
+}
+
 type Configuration struct {
 	App        App
 	Db         Db
 	Pagination Pagination
+	Jwt        Jwt
 }
 
 var config *Configuration
