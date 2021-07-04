@@ -1,8 +1,6 @@
 package jwt
 
 import (
-	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	. "sync/config"
 	"sync/pkg/model/user"
@@ -18,7 +16,6 @@ type Claims struct {
 
 // GenerateToken 生成jwt
 func GenerateToken(user user.User) (token string, err error) {
-	fmt.Println(LoadConfig().Jwt.Secret)
 	//1.设置过期时间
 	nowTime := time.Now()
 	expireTime := nowTime.Add(LoadConfig().Jwt.ExpireTime * time.Second)
@@ -40,21 +37,17 @@ func GenerateToken(user user.User) (token string, err error) {
 }
 
 // ParseToken 验证token
-func ParseToken(token string) (claims *Claims, err error) {
-	tokenClaims, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(tokenString string) (user user.User, err error) {
+	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return secret, nil
 	})
 
-	if tokenClaims == nil {
-		err = errors.New("ParseToken error")
+	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
+		user = claims.User
+		return
+	} else {
+		return
 	}
 
-	fmt.Println(tokenClaims)
-
-	if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
-		return claims, nil
-	}
-
-	err = errors.New("claims nil")
 	return
 }
