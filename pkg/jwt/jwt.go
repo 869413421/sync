@@ -2,6 +2,7 @@ package jwt
 
 import (
 	"errors"
+	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	. "sync/config"
 	"sync/pkg/model/user"
@@ -17,6 +18,7 @@ type Claims struct {
 
 // GenerateToken 生成jwt
 func GenerateToken(user user.User) (token string, err error) {
+	fmt.Println(LoadConfig().Jwt.Secret)
 	//1.设置过期时间
 	nowTime := time.Now()
 	expireTime := nowTime.Add(LoadConfig().Jwt.ExpireTime * time.Second)
@@ -31,7 +33,8 @@ func GenerateToken(user user.User) (token string, err error) {
 	}
 
 	//3.生成token
-	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
 	token, err = tokenClaims.SignedString(secret)
 	return
 }
@@ -45,6 +48,8 @@ func ParseToken(token string) (claims *Claims, err error) {
 	if tokenClaims == nil {
 		err = errors.New("ParseToken error")
 	}
+
+	fmt.Println(tokenClaims)
 
 	if claims, ok := tokenClaims.Claims.(*Claims); ok && tokenClaims.Valid {
 		return claims, nil

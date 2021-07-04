@@ -7,6 +7,10 @@ import (
 type BaseController struct {
 }
 
+func NewBaseController() *BaseController {
+	return &BaseController{}
+}
+
 func (*BaseController) Data(code int, errorMsg string, data interface{}) message.ResponseData {
 	responseData := message.ResponseData{
 		Code:     code,

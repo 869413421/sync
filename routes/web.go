@@ -3,6 +3,7 @@ package routes
 import (
 	"github.com/gin-gonic/gin"
 	. "sync/app/http/controllers"
+	"sync/app/http/middlewares"
 )
 
 type Router struct {
@@ -59,6 +60,6 @@ func RegisterWebRoutes(router *gin.Engine) {
 		}
 
 		//2.注册全局中间件
-		//router.Use(middlewares.StartSession, middlewares.Auth)
+		router.Use(middlewares.Jwt())
 	}
 }
