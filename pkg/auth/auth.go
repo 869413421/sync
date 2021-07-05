@@ -9,7 +9,7 @@ import (
 	"sync/pkg/model/user"
 )
 
-func Attempt(email string, password string) (token string, errors message.ResponseErrors) {
+func Attempt(name string, password string) (data map[string]interface{}, errors message.ResponseErrors) {
 	defer func() {
 		if err := recover(); err != nil {
 			fmt.Println(err)
@@ -17,12 +17,12 @@ func Attempt(email string, password string) (token string, errors message.Respon
 	}()
 
 	//1.根据邮箱获取用户信息
-	user, err := user.GetByEmail(email)
+	user, err := user.GetByName(name)
 	errors = make(message.ResponseErrors)
 	//2.判断用户信息是否出错
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			errors["email"] = []string{"账户不存在"}
+			errors["name"] = []string{"账户不存在"}
 			return
 		} else {
 			logger.Danger(err, "get user by email error")
@@ -36,10 +36,14 @@ func Attempt(email string, password string) (token string, errors message.Respon
 	}
 
 	//4.返回token
-	token, err = jwt.GenerateToken(user)
+	token, err := jwt.GenerateToken(user)
 	if err != nil {
 		errors["name"] = []string{err.Error()}
 		return
 	}
+	data = make(map[string]interface{})
+	data["token"] = token
+	data["user"] = user
+
 	return
 }

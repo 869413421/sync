@@ -13,3 +13,9 @@ func GetByEmail(email string) (user User, err error) {
 	err = model.DB.Where("email=?", email).First(&user).Error
 	return
 }
+
+func GetByName(name string) (user User, err error) {
+	err = model.DB.Where("name=?", name).First(&user).Error
+	return
+}
+
