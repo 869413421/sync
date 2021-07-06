@@ -9,6 +9,7 @@ import (
 )
 
 type App struct {
+	Protocol     string
 	Address      string
 	Static       string
 	Log          string

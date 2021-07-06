@@ -25,6 +25,7 @@ func (controller *AuthController) Login(context *gin.Context) {
 	loginJson := LoginJson{}
 	if err := context.ShouldBind(&loginJson); err != nil {
 		context.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, err.Error(), []string{}))
+		context.Abort()
 		return
 	}
 
@@ -32,6 +33,7 @@ func (controller *AuthController) Login(context *gin.Context) {
 	data, errors := auth.Attempt(loginJson.UserName, loginJson.Password)
 	if len(errors) > 0 {
 		context.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "认证失败", errors))
+		context.Abort()
 		return
 	}
 

@@ -8,15 +8,22 @@ import (
 
 var userController = NewUserController()
 var authController = NewAuthController()
+var imageController =NewImageController()
 
 //RegisterWebRoutes 注册路由
 func RegisterWebRoutes(router *gin.Engine) {
 	router.Use(middlewares.Cors())
 	router.POST("/login", authController.Login)
 
-	// 用户管理理由
+	// 用户管理路由
 	userApi := router.Group("/user").Use(middlewares.Jwt())
 	{
 		userApi.GET("/index", userController.Index)
+	}
+
+	// 图片管理路由
+	imgApi := router.Group("/image").Use(middlewares.Jwt())
+	{
+		imgApi.POST("", imageController.Store)
 	}
 }

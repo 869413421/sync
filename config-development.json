@@ -1,5 +1,6 @@
 {
   "App": {
+    "Protocol": "http",
     "Address": "127.0.0.1:8989",
     "Static": "public",
     "Log": "logs",
