@@ -8,7 +8,7 @@ import (
 
 var userController = NewUserController()
 var authController = NewAuthController()
-var imageController =NewImageController()
+var imageController = NewImageController()
 
 //RegisterWebRoutes 注册路由
 func RegisterWebRoutes(router *gin.Engine) {
@@ -19,6 +19,7 @@ func RegisterWebRoutes(router *gin.Engine) {
 	userApi := router.Group("/user").Use(middlewares.Jwt())
 	{
 		userApi.GET("/index", userController.Index)
+		userApi.GET("/:id", userController.Show)
 	}
 
 	// 图片管理路由
