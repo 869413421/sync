@@ -1,6 +1,7 @@
 package user
 
 import (
+	"sync/pkg/logger"
 	"sync/pkg/model"
 )
 
@@ -19,3 +20,13 @@ func GetByName(name string) (user User, err error) {
 	return
 }
 
+func (user *User) Update() (rowsAffected int64, err error) {
+	result := model.DB.Save(&user)
+	err = result.Error
+	if err != nil {
+		logger.Danger(err, "model user update error")
+		return
+	}
+	rowsAffected = result.RowsAffected
+	return
+}

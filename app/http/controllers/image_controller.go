@@ -19,12 +19,12 @@ func NewImageController() *ImageController {
 }
 
 // Store 图片上传
-func (controller *ImageController) Store(context *gin.Context) {
+func (controller *ImageController) Store(ctx *gin.Context) {
 	//1.获取文件
-	file, err := context.FormFile("file")
+	file, err := ctx.FormFile("file")
 	if err != nil {
-		context.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, err.Error(), []string{}))
-		context.Abort()
+		ctx.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, err.Error(), []string{}))
+		ctx.Abort()
 		return
 	}
 
@@ -38,15 +38,15 @@ func (controller *ImageController) Store(context *gin.Context) {
 	}
 	fileName := dir + file.Filename
 
-	err = context.SaveUploadedFile(file, fileName)
+	err = ctx.SaveUploadedFile(file, fileName)
 	if err != nil {
 		logger.Danger(err, "save file error")
-		context.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, "文件保存失败", []string{}))
-		context.Abort()
+		ctx.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, "文件保存失败", []string{}))
+		ctx.Abort()
 		return
 	}
 
 	url := config.Protocol + "://" + config.Address + "/static/img/" + dateStr + "/" + file.Filename
 
-	context.JSON(http.StatusCreated, controller.Data(0, "", url))
+	ctx.JSON(http.StatusCreated, controller.Data(0, "", url))
 }

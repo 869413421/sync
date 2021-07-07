@@ -20,6 +20,7 @@ func RegisterWebRoutes(router *gin.Engine) {
 	{
 		userApi.GET("/index", userController.Index)
 		userApi.GET("/:id", userController.Show)
+		userApi.PUT("/:id", userController.Update)
 	}
 
 	// 图片管理路由

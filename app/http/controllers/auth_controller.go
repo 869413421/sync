@@ -20,23 +20,23 @@ type LoginJson struct {
 }
 
 // Login 登录
-func (controller *AuthController) Login(context *gin.Context) {
+func (controller *AuthController) Login(ctx *gin.Context) {
 	//1.获取表单数据
 	loginJson := LoginJson{}
-	if err := context.ShouldBind(&loginJson); err != nil {
-		context.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, err.Error(), []string{}))
-		context.Abort()
+	if err := ctx.ShouldBind(&loginJson); err != nil {
+		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, err.Error(), []string{}))
+		ctx.Abort()
 		return
 	}
 
 	//2.用户认证
 	data, errors := auth.Attempt(loginJson.UserName, loginJson.Password)
 	if len(errors) > 0 {
-		context.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "认证失败", errors))
-		context.Abort()
+		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "认证失败", errors))
+		ctx.Abort()
 		return
 	}
 
 	//3.登录成功
-	context.JSON(http.StatusOK, controller.Data(0, "", data))
+	ctx.JSON(http.StatusOK, controller.Data(0, "", data))
 }
