@@ -18,9 +18,11 @@ func RegisterWebRoutes(router *gin.Engine) {
 	// 用户管理路由
 	userApi := router.Group("/user").Use(middlewares.Jwt())
 	{
-		userApi.GET("/index", userController.Index)
+		userApi.GET("", userController.Index)
+		userApi.POST("", userController.Store)
 		userApi.GET("/:id", userController.Show)
 		userApi.PUT("/:id", userController.Update)
+		userApi.DELETE("/:id", userController.Delete)
 	}
 
 	// 图片管理路由

@@ -3,6 +3,7 @@ package requests
 import (
 	"github.com/thedevsaddam/govalidator"
 	"sync/pkg/model/user"
+	"sync/pkg/types"
 )
 
 func ValidateUserEditForm(data user.User) map[string][]string {
@@ -11,13 +12,13 @@ func ValidateUserEditForm(data user.User) map[string][]string {
 			"required",
 			"alpha_num",
 			"between:3,30",
-			"not_exists:users,name",
+			"not_exists:users,name," + types.UInt64ToString(data.ID),
 		},
 		"email": []string{
 			"required",
 			"email",
 			"between:3,30",
-			"not_exists:users,name",
+			"not_exists:users,email," + types.UInt64ToString(data.ID),
 		},
 		"password": []string{
 			"required",

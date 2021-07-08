@@ -51,6 +51,43 @@ func (controller *UserController) Show(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, controller.Data(0, "", user))
 }
 
+// Store 新增用户
+func (controller *UserController) Store(ctx *gin.Context) {
+	//1.获取请求参数
+	name := ctx.Request.PostFormValue("name")
+	email := ctx.Request.PostFormValue("email")
+	password := ctx.Request.PostFormValue("password")
+	avatar := ctx.Request.PostFormValue("avatar")
+
+	//2.构建用户信息
+	_user := user.User{
+		Name:     name,
+		Email:    email,
+		Password: password,
+		Avatar:   avatar,
+	}
+
+	//3.验证提交信息
+	errs := requests.ValidateUserEditForm(_user)
+	if len(errs) > 0 {
+		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "validate error", errs))
+		ctx.Abort()
+		return
+	}
+
+	//4.新建用户
+	err := _user.Store()
+	if err != nil {
+		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "新建用户失败", err))
+		ctx.Abort()
+		return
+	}
+
+	//5.更新成功，响应信息
+	ctx.JSON(http.StatusOK, controller.Data(0, "", _user))
+}
+
+// Update 更新用户
 func (controller *UserController) Update(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
@@ -89,4 +126,29 @@ func (controller *UserController) Update(ctx *gin.Context) {
 
 	//5.更新成功，响应信息
 	ctx.JSON(http.StatusOK, controller.Data(0, "", _user))
+}
+
+// Delete 删除用户
+func (controller *UserController) Delete(ctx *gin.Context) {
+	//1.获取请求参数
+	id := ctx.Param("id")
+
+	//2.构建用户信息
+	_user, err := user.GetByID(types.StringToUInt64(id))
+	if err == gorm.ErrRecordNotFound {
+		ctx.JSON(http.StatusNotFound, controller.Data(http.StatusNotFound, "user not found", []string{}))
+		ctx.Abort()
+		return
+	}
+
+	//3.删除用户
+	rowsAffected, err := _user.Delete()
+	if rowsAffected == 0 {
+		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "删除用户失败", err))
+		ctx.Abort()
+		return
+	}
+
+	//5.删除成功，响应信息
+	ctx.JSON(http.StatusOK, controller.Data(0, "", []string{}))
 }

@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 	"sync/pkg/model"
+	"sync/pkg/types"
 	"unicode/utf8"
 )
 
@@ -14,18 +15,21 @@ func init() {
 	govalidator.AddCustomRule("not_exists", func(field string, rule string, message string, value interface{}) error {
 		// 1.获取验证规则中的表名，和字段名称
 		rng := strings.Split(strings.TrimPrefix(rule, "not_exists:"), ",")
-
 		//2.获取表名
 		tableName := rng[0]
 		dbFiled := rng[1]
+		id := types.StringToUInt64(rng[2])
 		val := value.(string)
 
 		//3.根据表名和字段名称获取记录总数
-		var count int64
-		model.DB.Table(tableName).Where(dbFiled+"=?", val).Count(&count)
+		type tempModel struct {
+			ID uint64
+		}
+		var item tempModel
+		model.DB.Table(tableName).Where(dbFiled+"=?", val).First(&item)
 
 		//4.判断是否已经存在记录
-		if count != 0 {
+		if item.ID != id {
 			if message != "" {
 				return errors.New(message)
 			}
