@@ -11,30 +11,31 @@ import (
 var base = controllers.NewBaseController()
 
 func Jwt() gin.HandlerFunc {
-	return func(context *gin.Context) {
+	return func(ctx *gin.Context) {
 		//1.获取token
-		token := context.GetHeader("Authorization")
+		token := ctx.GetHeader("Authorization")
 		if token != "" {
 			tokenS := strings.Split(token, " ")
 			token = tokenS[1]
 		} else {
-			token = context.Param("token")
+			token = ctx.Param("token")
 		}
 		if token == "" {
-			context.JSON(http.StatusForbidden, base.Data(http.StatusForbidden, "无法获取token", []string{}))
-			context.Abort()
+			ctx.JSON(http.StatusUnauthorized, base.Data(http.StatusUnauthorized, "无法获取token", []string{}))
+			ctx.Abort()
 			return
 		}
 
 		//2.解析token
-		_, err := jwt.ParseToken(token)
+		_user, err := jwt.ParseToken(token)
 		if err != nil {
-			context.JSON(http.StatusForbidden, base.Data(http.StatusForbidden, err.Error(), []string{}))
-			context.Abort()
+			ctx.JSON(http.StatusUnauthorized, base.Data(http.StatusUnauthorized, err.Error(), []string{}))
+			ctx.Abort()
 			return
 		}
 
 		//3.通过验证
-		context.Next()
+		ctx.Set("authUser", _user)
+		ctx.Next()
 	}
 }

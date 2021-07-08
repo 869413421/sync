@@ -10,13 +10,16 @@ var userController = NewUserController()
 var authController = NewAuthController()
 var imageController = NewImageController()
 
+var middlewareHandlers  []gin.HandlerFunc
+
 //RegisterWebRoutes 注册路由
 func RegisterWebRoutes(router *gin.Engine) {
 	router.Use(middlewares.Cors())
 	router.POST("/login", authController.Login)
 
+	middlewareHandlers = append(middlewareHandlers, middlewares.Jwt(), middlewares.Enforcer())
 	// 用户管理路由
-	userApi := router.Group("/user").Use(middlewares.Jwt())
+	userApi := router.Group("/user").Use(middlewareHandlers...)
 	{
 		userApi.GET("", userController.Index)
 		userApi.POST("", userController.Store)
@@ -26,7 +29,7 @@ func RegisterWebRoutes(router *gin.Engine) {
 	}
 
 	// 图片管理路由
-	imgApi := router.Group("/image").Use(middlewares.Jwt())
+	imgApi := router.Group("/image").Use(middlewareHandlers...)
 	{
 		imgApi.POST("", imageController.Store)
 	}
