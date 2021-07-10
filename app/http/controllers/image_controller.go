@@ -23,8 +23,7 @@ func (controller *ImageController) Store(ctx *gin.Context) {
 	//1.获取文件
 	file, err := ctx.FormFile("file")
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, err.Error(), []string{}))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, err.Error(), []string{})
 		return
 	}
 
@@ -37,16 +36,14 @@ func (controller *ImageController) Store(ctx *gin.Context) {
 		os.Mkdir(dir, os.ModeDir)
 	}
 	fileName := dir + file.Filename
-
 	err = ctx.SaveUploadedFile(file, fileName)
 	if err != nil {
 		logger.Danger(err, "save file error")
-		ctx.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, "文件保存失败", []string{}))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, err.Error(), []string{})
 		return
 	}
 
+	//返回url
 	url := config.Protocol + "://" + config.Address + "/static/img/" + dateStr + "/" + file.Filename
-
-	ctx.JSON(http.StatusCreated, controller.Data(0, "", url))
+	controller.ResponseJson(ctx, http.StatusOK, "", url)
 }

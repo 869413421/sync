@@ -22,9 +22,19 @@ func NewUserController() *UserController {
 }
 
 // Index 用户列表
-func (*UserController) Index(context *gin.Context) {
-	users, _ := user.All()
-	context.JSON(200, users)
+func (controller *UserController) Index(ctx *gin.Context) {
+	//1.获取分页数据
+	users, pagerData, err := user.Pagination(ctx, 1)
+	if err != nil {
+		controller.ResponseJson(ctx, http.StatusForbidden, err.Error(), []string{})
+		return
+	}
+
+	//响应数据
+	data := make(map[string]interface{})
+	data["PagerData"] = pagerData
+	data["users"] = users
+	controller.ResponseJson(ctx, http.StatusOK, "", data)
 }
 
 // Show 用户详情
@@ -32,8 +42,7 @@ func (controller *UserController) Show(ctx *gin.Context) {
 	//1.获取路由中参数
 	id := ctx.Param("id")
 	if id == "" {
-		ctx.JSON(http.StatusBadRequest, controller.Data(http.StatusBadRequest, "route id required", []string{}))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "route id required", []string{})
 		return
 	}
 
@@ -41,14 +50,13 @@ func (controller *UserController) Show(ctx *gin.Context) {
 	user, err := user.GetByID(types.StringToUInt64(id))
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			ctx.JSON(http.StatusNotFound, controller.Data(http.StatusNotFound, "user not found", []string{}))
-			ctx.Abort()
+			controller.ResponseJson(ctx, http.StatusForbidden, "user not found", []string{})
 			return
 		}
 		logger.Danger(err, "user controller get user err")
 	}
 	//3.返回用户信息
-	ctx.JSON(http.StatusOK, controller.Data(0, "", user))
+	controller.ResponseJson(ctx, http.StatusOK, "", user)
 }
 
 // Store 新增用户
@@ -70,21 +78,19 @@ func (controller *UserController) Store(ctx *gin.Context) {
 	//3.验证提交信息
 	errs := requests.ValidateUserEditForm(_user)
 	if len(errs) > 0 {
-		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "validate error", errs))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
 	//4.新建用户
 	err := _user.Store()
 	if err != nil {
-		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "新建用户失败", err))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "新建用户失败", err)
 		return
 	}
 
 	//5.更新成功，响应信息
-	ctx.JSON(http.StatusOK, controller.Data(0, "", _user))
+	controller.ResponseJson(ctx, http.StatusOK, "", _user)
 }
 
 // Update 更新用户
@@ -99,8 +105,7 @@ func (controller *UserController) Update(ctx *gin.Context) {
 	//2.构建用户信息
 	_user, err := user.GetByID(types.StringToUInt64(id))
 	if err == gorm.ErrRecordNotFound {
-		ctx.JSON(http.StatusNotFound, controller.Data(http.StatusNotFound, "user not found", []string{}))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "user not found", _user)
 		return
 	}
 	_user.Name = name
@@ -111,21 +116,19 @@ func (controller *UserController) Update(ctx *gin.Context) {
 	//3.验证提交信息
 	errs := requests.ValidateUserEditForm(_user)
 	if len(errs) > 0 {
-		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "validate error", errs))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
 	//4.更新用户
 	rowsAffected, err := _user.Update()
 	if rowsAffected == 0 {
-		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "更新用户失败", err))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "更新用户失败", err)
 		return
 	}
 
 	//5.更新成功，响应信息
-	ctx.JSON(http.StatusOK, controller.Data(0, "", _user))
+	controller.ResponseJson(ctx, http.StatusOK, "", _user)
 }
 
 // Delete 删除用户
@@ -136,19 +139,17 @@ func (controller *UserController) Delete(ctx *gin.Context) {
 	//2.构建用户信息
 	_user, err := user.GetByID(types.StringToUInt64(id))
 	if err == gorm.ErrRecordNotFound {
-		ctx.JSON(http.StatusNotFound, controller.Data(http.StatusNotFound, "user not found", []string{}))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "user not found", err)
 		return
 	}
 
 	//3.删除用户
 	rowsAffected, err := _user.Delete()
 	if rowsAffected == 0 {
-		ctx.JSON(http.StatusForbidden, controller.Data(http.StatusForbidden, "删除用户失败", err))
-		ctx.Abort()
+		controller.ResponseJson(ctx, http.StatusForbidden, "删除用户失败", err)
 		return
 	}
 
 	//5.删除成功，响应信息
-	ctx.JSON(http.StatusOK, controller.Data(0, "", []string{}))
+	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
 }

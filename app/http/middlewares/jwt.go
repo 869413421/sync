@@ -21,16 +21,14 @@ func Jwt() gin.HandlerFunc {
 			token = ctx.Param("token")
 		}
 		if token == "" {
-			ctx.JSON(http.StatusUnauthorized, base.Data(http.StatusUnauthorized, "无法获取token", []string{}))
-			ctx.Abort()
+			base.ResponseJson(ctx, http.StatusUnauthorized, "无法获取token", []string{})
 			return
 		}
 
 		//2.解析token
 		_user, err := jwt.ParseToken(token)
 		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, base.Data(http.StatusUnauthorized, err.Error(), []string{}))
-			ctx.Abort()
+			base.ResponseJson(ctx, http.StatusUnauthorized, err.Error(), []string{})
 			return
 		}
 

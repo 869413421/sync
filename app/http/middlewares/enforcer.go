@@ -38,8 +38,7 @@ func Enforcer() gin.HandlerFunc {
 		err := e.LoadPolicy()
 		if err != nil {
 			logger.Danger(err, "加载策略失败")
-			ctx.JSON(http.StatusForbidden, base.Data(http.StatusForbidden, "加载策略失败", []string{}))
-			ctx.Abort()
+			base.ResponseJson(ctx, http.StatusForbidden, "加载策略失败", []string{})
 			return
 		}
 		if ok, _ := e.Enforce(sub, obj, act); ok {
@@ -49,8 +48,7 @@ func Enforcer() gin.HandlerFunc {
 		}
 
 		//6.不具备权限
-		ctx.JSON(http.StatusForbidden, base.Data(http.StatusForbidden, "没有权限访问", []string{}))
-		ctx.Abort()
+		base.ResponseJson(ctx, http.StatusForbidden, "没有权限访问", []string{})
 		return
 	}
 }

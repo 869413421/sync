@@ -6,3 +6,6 @@ ERROR 2021/07/06 17:40:56 logger.go:49: open public/img/2021-07-06/a.jpg: The sy
 ERROR 2021/07/06 17:52:56 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
 ERROR 2021/07/06 17:52:59 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
 ERROR 2021/07/08 18:00:53 logger.go:49: Error 1054: Unknown column 'avatar' in 'field list' model user create error
+ERROR 2021/07/10 13:00:08 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/10 13:00:55 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/10 13:01:34 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error

@@ -1,14 +1,26 @@
 package user
 
 import (
+	"github.com/gin-gonic/gin"
 	"sync/pkg/logger"
 	"sync/pkg/model"
+	"sync/pkg/pagination"
 )
 
-// All 获取所有用户
-func All() (users []User, err error) {
+// Pagination 获取所有用户
+func Pagination(ctx *gin.Context, perPage int) (users []User, viewData pagination.ViewData, err error) {
 	err = model.DB.Find(&users).Error
-	return
+	//1.初始化分页实例
+	db := model.DB.Model(User{}).Order("created_at desc")
+	_pager := pagination.New(ctx, db, "/user", perPage)
+
+	// 2. 获取视图数据
+	viewData = _pager.Paging()
+
+	// 3. 获取数据
+	_pager.Results(&users)
+
+	return users, viewData, nil
 }
 
 // GetByEmail 根据邮件获取用户

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/gin-gonic/gin"
 	"sync/pkg/message"
 )
 
@@ -11,11 +12,13 @@ func NewBaseController() *BaseController {
 	return &BaseController{}
 }
 
-func (*BaseController) Data(code int, errorMsg string, data interface{}) message.ResponseData {
+func (*BaseController) ResponseJson(ctx *gin.Context, code int, errorMsg string, data interface{}) {
 	responseData := message.ResponseData{
 		Code:     code,
 		ErrorMsg: errorMsg,
 		Data:     data,
 	}
-	return responseData
+
+	ctx.JSON(code, responseData)
+	ctx.Abort()
 }
