@@ -2,7 +2,12 @@ package tests
 
 import (
 	"encoding/json"
+	"sync/bootstarp"
 )
+
+func init() {
+	bootstarp.Run()
+}
 
 var BaseUrl = "http://localhost:8989"
 
