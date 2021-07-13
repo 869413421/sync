@@ -1,31 +1,28 @@
 package tests
 
 import (
-	"bytes"
-	"fmt"
 	"github.com/stretchr/testify/assert"
-	"net/http"
+	"io/ioutil"
+	"sync/bootstarp"
 	"testing"
 )
 
 func TestLogin(test *testing.T) {
-	url := BaseUrl + "/login"
-	requestBody := fmt.Sprintf(`{
-		"username":"%s",
-		"password":"%s"
-	}`, "admin", "12345678")
+	url := "/login"
+	params := make(map[string]string)
+	params["username"] = "admin"
+	params["password"] = "12345678"
 
+	response := PostJson(url, params, bootstarp.Router)
 
-	requestJson := []byte(requestBody)
+	result := response.Result()
+	assert.Equal(test, 200, result.StatusCode, "StatusCode Not Equal")
+	defer result.Body.Close()
 
-	response, err := http.Post(url, "application/json", bytes.NewBuffer(requestJson))
-	if err == nil {
-		defer response.Body.Close()
-	}
+	_body, _ := ioutil.ReadAll(result.Body)
+	responseData, err := ParseResponse(_body)
+	assert.NoError(test, err, "Error Not Nil")
 
-	assert.NoError(test, err, "error not nil")
-
-	//_body, _ := io.ReadAll(response.Body)
-	//fmt.Println(ParseResponse(string(_body)))
-	assert.Equal(test, 200, response.StatusCode, "StatusCode Not Equal")
+	data := responseData["data"]
+	assert.NotNil(test, data, "Response Data Nil")
 }

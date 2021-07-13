@@ -16,6 +16,7 @@ type App struct {
 	Mode         string
 	ReadTimeout  time.Duration
 	WriteTimeout time.Duration
+	RunTest      bool
 }
 
 type Db struct {

@@ -20,7 +20,6 @@ func Run() {
 
 	//2.初始化gin路由
 	gin.SetMode(config.App.Mode)
-	fmt.Printf("Current Mode %s \n", config.App.Mode)
 	router := SetupRoute()
 	route.SetRoute(router)
 
@@ -29,6 +28,11 @@ func Run() {
 
 	//3.初始化数据库
 	SetupDB()
+
+	//4.如果是测试，不启动监听
+	if config.App.RunTest {
+		return
+	}
 
 	//4.启动服务端口
 	fmt.Println("Server Running")

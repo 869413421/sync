@@ -30,3 +30,12 @@ func StringToUInt64(str string) uint64 {
 
 	return num
 }
+
+func StrMapToString(mp map[string]string) string {
+	var value string
+	for key, val := range mp {
+		value += "&" + key + "=" + val
+	}
+	newStr := value[1:]
+	return newStr
+}
