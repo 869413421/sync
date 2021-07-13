@@ -18,7 +18,7 @@ func Jwt() gin.HandlerFunc {
 			tokenS := strings.Split(token, " ")
 			token = tokenS[1]
 		} else {
-			token = ctx.Param("token")
+			token = ctx.Request.FormValue("token")
 		}
 		if token == "" {
 			base.ResponseJson(ctx, http.StatusUnauthorized, "无法获取token", []string{})

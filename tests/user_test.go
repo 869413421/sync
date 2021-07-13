@@ -1,21 +1,27 @@
 package tests
 
 import (
-	"net/http"
+	"fmt"
+	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"sync/bootstarp"
 	"testing"
 )
 
 func TestUser(t *testing.T) {
-	url := BaseUrl + "/user"
+	url := "/user?token=" + Token
+	fmt.Println(url)
+	response := Get(url, bootstarp.Router)
 
-	response, err := http.Get(url)
-	if err == nil {
-		defer response.Body.Close()
-	}
+	result := response.Result()
+	assert.Equal(t, 200, result.StatusCode, "StatusCode Not Equal")
+	defer result.Body.Close()
 
-	//assert.NoError(test, err, "error not nil")
-	//
-	////_body, _ := io.ReadAll(response.Body)
-	////fmt.Println(ParseResponse(string(_body)))
-	//assert.Equal(test, 200, response.StatusCode, "StatusCode Not Equal")
+	_body, _ := ioutil.ReadAll(result.Body)
+	responseData, err := ParseResponse(_body)
+	assert.NoError(t, err, "Error Not Nil")
+	fmt.Println(responseData.ErrorMsg)
+	data := responseData.Data
+	assert.NotNil(t, data, "Response Data Nil")
+
 }

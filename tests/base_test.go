@@ -13,11 +13,17 @@ func init() {
 	bootstarp.Run()
 }
 
-var BaseUrl = "http://localhost:8989"
+var Token = ""
 
-func ParseResponse(input []byte) (map[string]interface{}, error) {
-	var data = make(map[string]interface{})
-	err := json.Unmarshal(input, &data)
+type ResponseData struct {
+	Code     int64                  `json:"code"`
+	ErrorMsg string                 `json:"errorMsg"`
+	Data     map[string]interface{} `json:"data"`
+}
+
+func ParseResponse(input []byte) (*ResponseData, error) {
+	var data = &ResponseData{}
+	err := json.Unmarshal(input, data)
 	return data, err
 }
 
@@ -45,7 +51,7 @@ func PostJson(url string, params map[string]string, router *gin.Engine) *httptes
 	jsonByte, _ := json.Marshal(params)
 
 	request := httptest.NewRequest("POST", url, bytes.NewReader(jsonByte))
-	request.Header.Add("Content-Type","application/json")
+	request.Header.Add("Content-Type", "application/json")
 
 	response := httptest.NewRecorder()
 

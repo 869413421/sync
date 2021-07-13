@@ -1,13 +1,14 @@
 package tests
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"sync/bootstarp"
 	"testing"
 )
 
-func TestLogin(test *testing.T) {
+func TestLogin(t *testing.T) {
 	url := "/login"
 	params := make(map[string]string)
 	params["username"] = "admin"
@@ -16,13 +17,16 @@ func TestLogin(test *testing.T) {
 	response := PostJson(url, params, bootstarp.Router)
 
 	result := response.Result()
-	assert.Equal(test, 200, result.StatusCode, "StatusCode Not Equal")
+	assert.Equal(t, 200, result.StatusCode, "StatusCode Not Equal")
 	defer result.Body.Close()
 
 	_body, _ := ioutil.ReadAll(result.Body)
 	responseData, err := ParseResponse(_body)
-	assert.NoError(test, err, "Error Not Nil")
+	fmt.Println(responseData)
+	assert.NoError(t, err, "Error Not Nil")
 
-	data := responseData["data"]
-	assert.NotNil(test, data, "Response Data Nil")
+	data := responseData.Data
+	assert.NotNil(t, data, "Response Data Nil")
+
+	Token = data["token"].(string)
 }
