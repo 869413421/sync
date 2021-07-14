@@ -29,7 +29,7 @@ func init() {
 		model.DB.Table(tableName).Where(dbFiled+"=?", val).First(&item)
 
 		//4.判断是否已经存在记录
-		if item.ID != id {
+		if item.ID != 0 && item.ID != id {
 			if message != "" {
 				return errors.New(message)
 			}

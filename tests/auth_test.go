@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"sync/bootstarp"
@@ -22,10 +21,11 @@ func TestLogin(t *testing.T) {
 
 	_body, _ := ioutil.ReadAll(result.Body)
 	responseData, err := ParseResponse(_body)
-	fmt.Println(responseData)
+
 	assert.NoError(t, err, "Error Not Nil")
 
-	data := responseData.Data
+	data := responseData.Data.(map[string]interface{})
+
 	assert.NotNil(t, data, "Response Data Nil")
 
 	Token = data["token"].(string)

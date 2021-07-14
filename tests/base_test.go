@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"github.com/gin-gonic/gin"
 	"net/http/httptest"
+	"strings"
 	"sync/bootstarp"
 	"sync/pkg/types"
 )
@@ -16,9 +17,9 @@ func init() {
 var Token = ""
 
 type ResponseData struct {
-	Code     int64                  `json:"code"`
-	ErrorMsg string                 `json:"errorMsg"`
-	Data     map[string]interface{} `json:"data"`
+	Code     int64       `json:"code"`
+	ErrorMsg string      `json:"errorMsg"`
+	Data     interface{} `json:"data"`
 }
 
 func ParseResponse(input []byte) (*ResponseData, error) {
@@ -27,8 +28,8 @@ func ParseResponse(input []byte) (*ResponseData, error) {
 	return data, err
 }
 
-func Get(url string, router *gin.Engine) *httptest.ResponseRecorder {
-	request := httptest.NewRequest("GET", url, nil)
+func Request(method string, url string, router *gin.Engine) *httptest.ResponseRecorder {
+	request := httptest.NewRequest(method, url, nil)
 
 	response := httptest.NewRecorder()
 
@@ -37,9 +38,9 @@ func Get(url string, router *gin.Engine) *httptest.ResponseRecorder {
 	return response
 }
 
-func PostFrom(url string, params map[string]string, router *gin.Engine) *httptest.ResponseRecorder {
-	request := httptest.NewRequest("POST", url+types.StrMapToString(params), nil)
-
+func RequestFrom(method string, url string, params map[string]string, router *gin.Engine) *httptest.ResponseRecorder {
+	request := httptest.NewRequest(method, url, strings.NewReader(types.StrMapToString(params)))
+	request.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 	response := httptest.NewRecorder()
 
 	router.ServeHTTP(response, request)
