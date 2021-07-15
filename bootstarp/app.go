@@ -34,7 +34,7 @@ func Run() {
 		return
 	}
 
-	//4.启动服务端口
+	//5.启动服务端口
 	fmt.Println("Server Running")
 	server := &http.Server{
 		Addr:         config.App.Address,
@@ -48,7 +48,7 @@ func Run() {
 		}
 	}()
 
-	//5.阻塞信号，平滑关闭
+	//6.阻塞信号，平滑关闭
 	quit := make(chan os.Signal)
 	signal.Notify(quit, os.Interrupt)
 

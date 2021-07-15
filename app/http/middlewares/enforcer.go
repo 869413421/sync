@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"sync/pkg/enforcer"
@@ -33,7 +32,7 @@ func Enforcer() gin.HandlerFunc {
 				sub = roles[0]
 			}
 		}
-		fmt.Println(sub)
+
 		//5.判断是否在策略中存在
 		err := e.LoadPolicy()
 		if err != nil {

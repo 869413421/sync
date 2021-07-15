@@ -9,7 +9,6 @@ import (
 
 // Pagination 获取所有用户
 func Pagination(ctx *gin.Context, perPage int) (users []User, viewData pagination.ViewData, err error) {
-	err = model.DB.Find(&users).Error
 	//1.初始化分页实例
 	db := model.DB.Model(User{}).Order("created_at desc")
 	_pager := pagination.New(ctx, db, "/user", perPage)
