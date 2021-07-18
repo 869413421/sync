@@ -14,9 +14,6 @@ type UserController struct {
 	BaseController
 }
 
-type UserID struct {
-}
-
 func NewUserController() *UserController {
 	return &UserController{}
 }
@@ -24,7 +21,7 @@ func NewUserController() *UserController {
 // Index 用户列表
 func (controller *UserController) Index(ctx *gin.Context) {
 	//1.获取分页数据
-	users, pagerData, err := user.Pagination(ctx, 1)
+	users, pagerData, err := user.Pagination(ctx, controller.PerPage(ctx))
 	if err != nil {
 		controller.ResponseJson(ctx, http.StatusForbidden, err.Error(), []string{})
 		return

@@ -1,7 +1,6 @@
 package user
 
 import (
-	"sync/pkg/logger"
 	"sync/pkg/model"
 	"sync/pkg/password"
 )
@@ -22,16 +21,3 @@ func (user *User) ComparePassword(_password string) bool {
 	return password.CheckHash(_password, user.Password)
 }
 
-// GetByID 根据id获取用户
-func GetByID(id uint64) (user User, err error) {
-	err = model.DB.Where("id=?", id).First(&user).Error
-	return
-}
-
-func (user *User) Create() (err error) {
-	err = model.DB.Create(&user).Error
-	if err != nil {
-		logger.Danger(err, "model user create error")
-	}
-	return
-}

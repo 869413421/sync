@@ -9,3 +9,15 @@ ERROR 2021/07/08 18:00:53 logger.go:49: Error 1054: Unknown column 'avatar' in '
 ERROR 2021/07/10 13:00:08 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
 ERROR 2021/07/10 13:00:55 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
 ERROR 2021/07/10 13:01:34 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:08:37 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:11:22 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:13:05 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:14:04 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:15:37 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:17:26 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 12:18:30 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 14:50:12 logger.go:49: Error 1054: Unknown column 'p_type' in 'field list' model rule create error
+ERROR 2021/07/18 14:52:32 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
+ERROR 2021/07/18 14:52:56 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
+ERROR 2021/07/18 14:53:16 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
+ERROR 2021/07/18 14:53:45 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error

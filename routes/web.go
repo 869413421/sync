@@ -9,8 +9,9 @@ import (
 var userController = NewUserController()
 var authController = NewAuthController()
 var imageController = NewImageController()
+var casbinController = NewCasbinController()
 
-var middlewareHandlers  []gin.HandlerFunc
+var middlewareHandlers []gin.HandlerFunc
 
 //RegisterWebRoutes 注册路由
 func RegisterWebRoutes(router *gin.Engine) {
@@ -32,5 +33,15 @@ func RegisterWebRoutes(router *gin.Engine) {
 	imgApi := router.Group("/image").Use(middlewareHandlers...)
 	{
 		imgApi.POST("", imageController.Store)
+	}
+
+	// casbin管理路由
+	casbinApi := router.Group("/casbin").Use(middlewareHandlers...)
+	{
+		casbinApi.GET("", casbinController.Index)
+		casbinApi.GET("/:id", casbinController.Show)
+		casbinApi.POST("", casbinController.Store)
+		casbinApi.PUT("/:id", casbinController.Update)
+		casbinApi.DELETE("/:id", casbinController.Delete)
 	}
 }

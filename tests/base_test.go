@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"sync/bootstarp"
+	"sync/pkg/message"
 	"sync/pkg/types"
 )
 
@@ -16,14 +17,8 @@ func init() {
 
 var Token = ""
 
-type ResponseData struct {
-	Code     int64       `json:"code"`
-	ErrorMsg string      `json:"errorMsg"`
-	Data     interface{} `json:"data"`
-}
-
-func ParseResponse(input []byte) (*ResponseData, error) {
-	var data = &ResponseData{}
+func ParseResponse(input []byte) (*message.ResponseData, error) {
+	var data = &message.ResponseData{}
 	err := json.Unmarshal(input, data)
 	return data, err
 }

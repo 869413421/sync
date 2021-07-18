@@ -21,3 +21,14 @@ ERROR 2021/07/14 09:52:33 logger.go:49: strconv.Atoi: parsing "": invalid syntax
 ERROR 2021/07/14 10:03:41 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
 ERROR 2021/07/14 10:05:04 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
 ERROR 2021/07/14 17:31:34 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 11:50:28 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:50:49 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:51:52 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:52:48 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:53:35 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:55:45 logger.go:49: Database dialect '' is not supported. Supported databases are postgres, mysql and sqlserver create gormadapter error
+ERROR 2021/07/18 11:55:47 logger.go:49: dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it. gorm open error
+ERROR 2021/07/18 11:57:53 logger.go:49: dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it. get user by email error
+ERROR 2021/07/18 11:58:31 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 20:34:49 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
+ERROR 2021/07/18 20:34:52 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error

@@ -12,6 +12,12 @@ import (
 var Enforcer *casbin.Enforcer
 
 func init() {
+	defer func() {
+		err := recover()
+		if err != nil{
+			fmt.Println(err)
+		}
+	}()
 	//1.初始化mysql适配器
 	config := config.LoadConfig()
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s", config.Db.User, config.Db.Password, config.Db.Address, config.Db.Database)

@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
+	"sync/config"
 	"sync/pkg/message"
+	"sync/pkg/types"
 )
 
 type BaseController struct {
@@ -21,4 +23,12 @@ func (*BaseController) ResponseJson(ctx *gin.Context, code int, errorMsg string,
 
 	ctx.JSON(code, responseData)
 	ctx.Abort()
+}
+
+func (*BaseController) PerPage(ctx *gin.Context) int {
+	page := ctx.Request.FormValue("pageSize")
+	if page == "" {
+		return config.LoadConfig().Pagination.PerPage
+	}
+	return types.StringToInt(page)
 }
