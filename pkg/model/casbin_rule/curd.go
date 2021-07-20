@@ -20,7 +20,10 @@ func Pagination(ctx *gin.Context, where map[string]interface{}, perPage int) (ru
 	viewData = _pager.Paging()
 
 	// 3. 获取数据
-	_pager.Results(&rules)
+	err = _pager.Results(&rules)
+	if err != nil {
+		return nil, pagination.ViewData{}, err
+	}
 
 	return rules, viewData, nil
 }
