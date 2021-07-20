@@ -14,6 +14,7 @@ require (
 	github.com/json-iterator/go v1.1.11 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
+	github.com/siddontang/go-mysql v1.3.0 // indirect
 	github.com/stretchr/testify v1.7.0
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/ugorji/go v1.2.6 // indirect
@@ -29,3 +30,5 @@ require (
 	gorm.io/driver/sqlserver v1.0.7 // indirect
 	gorm.io/gorm v1.21.11
 )
+
+replace github.com/siddontang/go-mysql => github.com/go-mysql-org/go-mysql v1.3.0
