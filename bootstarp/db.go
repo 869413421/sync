@@ -1,21 +1,36 @@
 package bootstarp
 
 import (
+	"gorm.io/gorm"
 	"sync/config"
 	"sync/pkg/model"
+	"sync/pkg/model/sync_rule"
+	"sync/pkg/model/user"
 )
 
+// SetupDB 初始化gorm
 func SetupDB() {
+	//1.建立连接池
 	dbConfig := config.LoadConfig()
-	//建立连接池
 	db := model.ConnectDB()
-
 	sqlDB, _ := db.DB()
 
-	// 设置最大连接数
+	//2.设置最大连接数
 	sqlDB.SetMaxOpenConns(dbConfig.Db.MaxConnections)
-	// 设置最大空闲连接数
+
+	//3.设置最大空闲连接数
 	sqlDB.SetMaxIdleConns(dbConfig.Db.MaxIdeConnections)
-	// 设置每个链接的过期时间
+
+	//4.设置每个链接的过期时间
 	sqlDB.SetConnMaxLifetime(dbConfig.Db.ConnectionMaxLifeTime)
+
+	//5.执行数据迁移
+	migration(db)
+}
+
+// migration 数据迁移
+func migration(db *gorm.DB) {
+	db.Set("gorm:table_options", "ENGINE=InnoDB")
+	db.Set("gorm:table_options", "Charset=utf8")
+	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{})
 }

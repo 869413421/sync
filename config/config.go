@@ -25,9 +25,14 @@ type Db struct {
 	Database              string
 	User                  string
 	Password              string
+	Charset               string
 	MaxConnections        int
 	MaxIdeConnections     int
 	ConnectionMaxLifeTime time.Duration
+	ServerID              uint32
+	DumpExec              string
+	DiscardErr            bool
+	SkipMasterData        bool
 }
 
 type Pagination struct {

@@ -15,9 +15,14 @@
     "Database": "",
     "User": "",
     "Password": ".",
+    "Charset": "utf-8",
     "MaxConnections": 100,
     "MaxIdeConnections": 25,
-    "ConnectionMaxLifeTime": 5
+    "ConnectionMaxLifeTime": 5,
+    "ServerID": 0,
+    "DumpExec": "",
+    "DiscardErr": false,
+    "SkipMasterData": false
   },
   "Pagination": {
     "PerPage": 10,

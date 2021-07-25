@@ -9,6 +9,7 @@ import (
 	"os"
 	"os/signal"
 	. "sync/config"
+	"sync/pkg/river"
 	"sync/pkg/route"
 	"time"
 )
@@ -28,6 +29,8 @@ func Run() {
 
 	//3.初始化数据库
 	SetupDB()
+
+	fmt.Println(river.NewRiver())
 
 	//4.如果是测试，不启动监听
 	if config.App.RunTest {
