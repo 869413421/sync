@@ -32,4 +32,5 @@ require (
 )
 
 replace github.com/siddontang/go-mysql v1.3.0 => github.com/go-mysql-org/go-mysql v1.3.0
+
 replace github.com/go-mysql-org/go-mysql v1.3.0 => github.com/siddontang/go-mysql v1.3.0
