@@ -2,6 +2,7 @@ package river
 
 import (
 	"context"
+	"errors"
 	"github.com/siddontang/go-mysql/canal"
 	"sync"
 	"sync/config"
@@ -12,6 +13,8 @@ type River struct {
 	wg sync.WaitGroup
 
 	syncCh chan interface{}
+
+	syncRules []sync_rule.SyncRule
 
 	ctx    context.Context
 	cancel context.CancelFunc
@@ -34,12 +37,16 @@ func NewRiver() (*River, error) {
 		return nil, err
 	}
 
-	//3.初始化运河对象
+	//3.加载数据库规则
+	if r.syncRules, err = sync_rule.GetAll(); err != nil {
+		return nil, err
+	}
+	//4.初始化运河对象
 	if err = r.NewCanal(); err != nil {
 		return nil, err
 	}
 
-	//4.预处理同步规则
+	//5.预处理同步规则
 	if err = r.prepareRule(); err != nil {
 		return nil, err
 	}
@@ -66,11 +73,7 @@ func (r *River) NewCanal() error {
 
 	//3.从数据库中加载规则
 	var err error
-	rules, err := sync_rule.GetAll()
-	if err != nil {
-		return err
-	}
-	for _, rule := range rules {
+	for _, rule := range r.syncRules {
 		canalConfig.IncludeTableRegex = append(canalConfig.ExcludeTableRegex, rule.Schema+"\\."+rule.Table)
 	}
 
@@ -81,4 +84,38 @@ func (r *River) NewCanal() error {
 
 func (r *River) prepareRule() error {
 
+}
+
+func (r *River) parseSource() (map[string][]string, error) {
+	wildTables := make(map[string][]string, len(r.syncRules))
+	if !r.isValidTables() {
+		return nil, errors.New("wildcard * is not allowed for multiple tables")
+	}
+
+	for _, rule := range r.syncRules {
+
+	}
+}
+
+// isValidTables 检查规则是否符合格式
+func (r *River) isValidTables() bool {
+	for _, rule := range r.syncRules {
+		if len(rule.Schema) == 0 {
+			return false
+		}
+
+		if rule.Schema == "*" {
+			return false
+		}
+
+		if len(rule.Table) == 0 {
+			return false
+		}
+
+		if rule.Table == "*" {
+			return false
+		}
+	}
+
+	return true
 }
