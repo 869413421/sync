@@ -1,7 +1,7 @@
 package river
 
 import (
-	"github.com/siddontang/go-mysql/schema"
+	"github.com/go-mysql-org/go-mysql/schema"
 	"strings"
 )
 
@@ -15,9 +15,9 @@ type Rule struct {
 
 	FieldMapping map[string]string
 
-	tableINfo *schema.Table
+	TableInfo *schema.Table
 
-	filter []string
+	Filter []string
 
 	Pipeline string
 }
