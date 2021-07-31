@@ -1,23 +1,7 @@
-ERROR 2021/07/06 17:39:10 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:40:04 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:40:07 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:40:08 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:40:56 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:52:56 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/06 17:52:59 logger.go:49: open public/img/2021-07-06/a.jpg: The system cannot find the path specified. save file error
-ERROR 2021/07/08 18:00:53 logger.go:49: Error 1054: Unknown column 'avatar' in 'field list' model user create error
-ERROR 2021/07/10 13:00:08 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/10 13:00:55 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/10 13:01:34 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:08:37 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:11:22 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:13:05 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:14:04 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:15:37 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:17:26 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 12:18:30 logger.go:49: strconv.Atoi: parsing "": invalid syntax StringToInt Error
-ERROR 2021/07/18 14:50:12 logger.go:49: Error 1054: Unknown column 'p_type' in 'field list' model rule create error
-ERROR 2021/07/18 14:52:32 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
-ERROR 2021/07/18 14:52:56 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
-ERROR 2021/07/18 14:53:16 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
-ERROR 2021/07/18 14:53:45 logger.go:49: Error 1062: Duplicate entry 'g-guest-edit-GET---' for key 'idx_casbin_rule' model rule create error
+INFO 2021/07/31 19:17:53 logger.go:43: 保存binlog pos  (mysql-bin.000001, 2578223)
+INFO 2021/07/31 19:17:56 logger.go:43: 保存binlog pos  (mysql-bin.000001, 4882129)
+INFO 2021/07/31 19:18:48 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6365910)
+INFO 2021/07/31 19:19:29 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6365910)
+INFO 2021/07/31 19:19:47 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6365910)
+INFO 2021/07/31 19:29:59 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6808712)
+INFO 2021/07/31 19:59:59 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6968943)

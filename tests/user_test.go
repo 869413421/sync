@@ -62,7 +62,6 @@ func TestGetUser(t *testing.T) {
 	assert.NoError(t, err, "Error Not Nil")
 	data := responseData.Data.(map[string]interface{})
 	assert.NotNil(t, data, "Response Data Nil")
-	fmt.Println(data)
 }
 
 func TestUpdateUser(t *testing.T) {

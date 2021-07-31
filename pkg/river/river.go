@@ -9,6 +9,7 @@ import (
 	"strings"
 	"sync"
 	"sync/config"
+	"sync/pkg/logger"
 	"sync/pkg/model/sync_rule"
 )
 
@@ -37,9 +38,10 @@ func NewRiver() (*River, error) {
 	//1.初始化管道
 	r := new(River)
 	r.syncCh = make(chan interface{})
+	r.rules = make(map[string]*Rule)
 	r.ctx, r.cancel = context.WithCancel(context.Background())
 
-	//2.加载binlog增量游标
+	//2.加载binlog对象
 	var err error
 	if r.master, err = LoadMasterInfo("./var"); err != nil {
 		return nil, err
@@ -55,7 +57,6 @@ func NewRiver() (*River, error) {
 	}
 
 	//5.预处理同步规则
-	r.rules = make(map[string]*Rule)
 	if err = r.prepareRule(); err != nil {
 		return nil, err
 	}
@@ -69,8 +70,21 @@ func NewRiver() (*River, error) {
 	if err = r.canal.CheckBinlogRowImage("FULL"); err != nil {
 		return nil, err
 	}
-	r.canal.Run()
+
 	return r, err
+}
+
+// Run 启动同步
+func (r *River) Run() error {
+	r.wg.Add(1)
+	go r.syncLoop()
+	pos := r.master.Position()
+	if err := r.canal.RunFrom(pos); err != nil {
+		logger.Danger("启动canal同步失败：", err)
+		return err
+	}
+
+	return nil
 }
 
 //NewCanal 初始化运河配置
@@ -93,7 +107,7 @@ func (r *River) NewCanal() error {
 	//3.从数据库中加载规则
 	var err error
 	for _, rule := range r.syncRules {
-		canalConfig.IncludeTableRegex = append(canalConfig.ExcludeTableRegex, rule.Schema+"\\."+rule.Table)
+		canalConfig.IncludeTableRegex = append(canalConfig.IncludeTableRegex, fmt.Sprintf("%s.%s", rule.Schema, rule.Table))
 	}
 
 	//4.赋值运河对象
