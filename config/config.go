@@ -45,11 +45,18 @@ type Jwt struct {
 	ExpireTime time.Duration
 }
 
+type ElasticSearch struct {
+	Nodes    []string
+	Name     string
+	Password string
+}
+
 type Configuration struct {
-	App        App
-	Db         Db
-	Pagination Pagination
-	Jwt        Jwt
+	App           App
+	Db            Db
+	Pagination    Pagination
+	Jwt           Jwt
+	ElasticSearch ElasticSearch
 }
 
 var config *Configuration

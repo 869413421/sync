@@ -31,5 +31,12 @@
   "Jwt": {
     "Secret": "",
     "ExpireTime": 86400
+  },
+  "ElasticSearch": {
+    "Nodes": [
+      ""
+    ],
+    "Name": "",
+    "Password": ""
   }
 }

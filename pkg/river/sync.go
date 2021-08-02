@@ -5,6 +5,7 @@ import (
 	"github.com/go-mysql-org/go-mysql/canal"
 	"github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
+	"sync/pkg/elastic"
 	"sync/pkg/logger"
 	"time"
 )
@@ -67,7 +68,7 @@ func (h *eventHandler) OnRow(e *canal.RowsEvent) error {
 
 
 	h.r.syncCh<-posSaver{mysql.Position{Name: "mysql-bin.000001",Pos: 6365910}, false}
-
+	elastic.Create()
 	return nil
 }
 

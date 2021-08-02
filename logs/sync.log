@@ -5,3 +5,9 @@ INFO 2021/07/31 19:19:29 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6365
 INFO 2021/07/31 19:19:47 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6365910)
 INFO 2021/07/31 19:29:59 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6808712)
 INFO 2021/07/31 19:59:59 logger.go:43: 保存binlog pos  (mysql-bin.000001, 6968943)
+ERROR 2021/08/02 22:53:43 logger.go:49: connectEs error: no active connection found: no Elasticsearch node available
+ERROR 2021/08/02 22:55:33 logger.go:49: connectEs error: no active connection found: no Elasticsearch node available
+ERROR 2021/08/02 23:00:19 logger.go:49: connectEs error: parse "47.94.155.227:9200": first path segment in URL cannot contain colon
+ERROR 2021/08/02 23:00:50 logger.go:49: connectEs error: no active connection found: no Elasticsearch node available
+ERROR 2021/08/02 23:01:26 logger.go:49: connectEs error: no active connection found: no Elasticsearch node available
+ERROR 2021/08/02 23:02:04 logger.go:49: connectEs error: no active connection found: no Elasticsearch node available
