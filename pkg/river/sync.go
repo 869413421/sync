@@ -5,7 +5,6 @@ import (
 	"github.com/go-mysql-org/go-mysql/canal"
 	"github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
-	"sync/pkg/elastic"
 	"sync/pkg/logger"
 	"time"
 )
@@ -55,6 +54,28 @@ func (h *eventHandler) OnXID(nextPos mysql.Position) error {
 
 //OnRow 监听数据记录
 func (h *eventHandler) OnRow(e *canal.RowsEvent) error {
+	//1.查找配置规则
+	rule, ok := h.r.rules[ruleKey(e.Table.Schema, e.Table.Name)]
+	if !ok {
+		return nil
+	}
+
+	fmt.Println("row run")
+	fmt.Println(rule)
+	fmt.Println(e.Action)
+	fmt.Println(e.Table.Name)
+	fmt.Println(e.Table.Schema)
+	fmt.Println(e.String())
+
+	//2.根据动作分发数据
+	switch e.Action {
+	case canal.InsertAction:
+		return nil
+	case canal.UpdateAction:
+		return nil
+	case canal.DeleteAction:
+		return nil
+	}
 	//rule, ok := h.r.rules[ruleKey(e.Table.Schema, e.Table.Name)]
 	//if !ok {
 	//	return nil
@@ -66,10 +87,7 @@ func (h *eventHandler) OnRow(e *canal.RowsEvent) error {
 	fmt.Println(e.Table.Schema)
 	fmt.Println(e.String())
 
-
-	h.r.syncCh<-posSaver{mysql.Position{Name: "mysql-bin.000001",Pos: 6365910}, false}
-	elastic.Create()
-	return nil
+	return h.r.ctx.Err()
 }
 
 func (h *eventHandler) OnGTID(gtid mysql.GTIDSet) error {
