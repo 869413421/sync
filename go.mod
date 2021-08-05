@@ -8,8 +8,9 @@ require (
 	github.com/casbin/gorm-adapter/v3 v3.3.1
 	github.com/denisenkom/go-mssqldb v0.10.0 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fortytw2/leaktest v1.3.0 // indirect
 	github.com/gin-gonic/gin v1.7.2
-	github.com/go-mysql-org/go-mysql v1.3.0 // indirect
+	github.com/go-mysql-org/go-mysql v1.3.0
 	github.com/go-playground/validator/v10 v10.6.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/jackc/pgproto3/v2 v2.1.0 // indirect
@@ -17,9 +18,8 @@ require (
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/mattn/go-isatty v0.0.13 // indirect
-	github.com/olivere/elastic v6.2.37+incompatible // indirect
-	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726 // indirect
-	github.com/siddontang/go-mysql v1.3.0
+	github.com/olivere/elastic v6.2.37+incompatible
+	github.com/siddontang/go v0.0.0-20180604090527-bdc77568d726
 	github.com/stretchr/testify v1.7.0
 	github.com/thedevsaddam/govalidator v1.9.10
 	github.com/ugorji/go v1.2.6 // indirect

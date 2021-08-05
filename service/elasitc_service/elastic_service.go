@@ -3,17 +3,31 @@ package elasitc_service
 import (
 	"bytes"
 	"fmt"
+	"github.com/go-mysql-org/go-mysql/canal"
+	"github.com/olivere/elastic"
+	elastic2 "sync/pkg/elastic"
 	"sync/pkg/river"
 )
 
-func InsertSync(rule *river.Rule, rows [][]interface{}) {
-
+// MakeInsertRequest 创建Es新增请求
+func MakeInsertRequest(rule *river.Rule, rows [][]interface{}) ([]*elastic.IndexService, error) {
+	return MakeRequest(rule, canal.InsertAction, rows)
 }
 
-func MakeRequest(rule *river.Rule, action string, rows [][]interface{}) {
+// MakeRequest 创建Es请求
+func MakeRequest(rule *river.Rule, action string, rows [][]interface{}) ([]*elastic.IndexService, error) {
+	reqs := make([]*elastic.IndexService, 0, len(rows))
 	for _, values := range rows {
 		id, err := getDocId(rule, values)
+		if err != nil {
+			return nil, err
+		}
+
+		req := elastic2.EsClient.Index().Index(rule.Index).Id(id).Type(rule.Type).BodyJson(values)
+		reqs = append(reqs, req)
 	}
+
+	return reqs, nil
 }
 
 // getDocId 获取binlog中的id
