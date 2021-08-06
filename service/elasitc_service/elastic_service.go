@@ -10,21 +10,21 @@ import (
 )
 
 // MakeInsertRequest 创建Es新增请求
-func MakeInsertRequest(rule *river.Rule, rows [][]interface{}) ([]*elastic.IndexService, error) {
+func MakeInsertRequest(rule *river.Rule, rows [][]interface{}) (*elastic.BulkService, error) {
 	return MakeRequest(rule, canal.InsertAction, rows)
 }
 
 // MakeRequest 创建Es请求
-func MakeRequest(rule *river.Rule, action string, rows [][]interface{}) ([]*elastic.IndexService, error) {
-	reqs := make([]*elastic.IndexService, 0, len(rows))
+func MakeRequest(rule *river.Rule, action string, rows [][]interface{}) (*elastic.BulkService, error) {
+	reqs := elastic2.EsClient.Bulk()
 	for _, values := range rows {
 		id, err := getDocId(rule, values)
 		if err != nil {
 			return nil, err
 		}
 
-		req := elastic2.EsClient.Index().Index(rule.Index).Id(id).Type(rule.Type).BodyJson(values)
-		reqs = append(reqs, req)
+		req := elastic.NewBulkIndexRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(values)
+		reqs.Add(req)
 	}
 
 	return reqs, nil
