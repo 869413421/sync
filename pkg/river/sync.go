@@ -5,7 +5,10 @@ import (
 	"github.com/go-mysql-org/go-mysql/canal"
 	"github.com/go-mysql-org/go-mysql/mysql"
 	"github.com/go-mysql-org/go-mysql/replication"
+	"github.com/olivere/elastic"
+	"sync/pkg/elasticsearch_client"
 	"sync/pkg/logger"
+	"sync/service/elasitc_service"
 	"time"
 )
 
@@ -60,32 +63,24 @@ func (h *eventHandler) OnRow(e *canal.RowsEvent) error {
 		return nil
 	}
 
-	fmt.Println("row run")
-	fmt.Println(rule)
-	fmt.Println(e.Action)
-	fmt.Println(e.Table.Name)
-	fmt.Println(e.Table.Schema)
-	fmt.Println(e.String())
-
 	//2.根据动作分发数据
+	var err error
+	esService := elasitc_service.NewElasticService(rule, e.Rows)
 	switch e.Action {
 	case canal.InsertAction:
-		return nil
+		reqs, _ := esService.MakeInsertRequest()
+		h.r.syncCh <- reqs
 	case canal.UpdateAction:
-		return nil
+		reqs, _ := esService.MakeUpdateRequest()
+		h.r.syncCh <- reqs
 	case canal.DeleteAction:
-		return nil
+		reqs, _ := esService.MakeDeleteRequest()
+		h.r.syncCh <- reqs
 	}
-	//rule, ok := h.r.rules[ruleKey(e.Table.Schema, e.Table.Name)]
-	//if !ok {
-	//	return nil
-	//}
-	fmt.Println("row run")
-	fmt.Println(time.Now())
-	fmt.Println(e.Action)
-	fmt.Println(e.Table.Name)
-	fmt.Println(e.Table.Schema)
-	fmt.Println(e.String())
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	return h.r.ctx.Err()
 }
@@ -104,10 +99,7 @@ func (h *eventHandler) String() string {
 }
 
 func (r *River) syncLoop() {
-	bulkSize := 100
-	if bulkSize == 0 {
-		bulkSize = 128
-	}
+	bulkSize := 1
 
 	var interval time.Duration
 	interval = 0
@@ -120,7 +112,7 @@ func (r *River) syncLoop() {
 	defer r.wg.Done()
 
 	lastSavedTime := time.Now()
-	//reqs := make([]*elastic.BulkRequest, 0, 1024)
+	reqs := make([]elastic.BulkableRequest, 0, 1024)
 
 	var pos mysql.Position
 
@@ -140,9 +132,9 @@ func (r *River) syncLoop() {
 					needSavePos = true
 					pos = v.pos
 				}
-				//case []*elastic.BulkRequest:
-				//	reqs = append(reqs, v...)
-				//	needFlush = len(reqs) >= bulkSize
+			case []elastic.BulkableRequest:
+				reqs = v
+				needFlush = len(reqs) >= bulkSize
 			}
 		case <-ticker.C:
 			needFlush = true
@@ -151,13 +143,13 @@ func (r *River) syncLoop() {
 		}
 
 		if needFlush {
-			// TODO: retry some times?
-			//if err := r.doBulk(reqs); err != nil {
-			//	log.Errorf("do ES bulk err %v, close sync", err)
-			//	r.cancel()
-			//	return
-			//}
-			//reqs = reqs[0:0]
+			//TODO: retry some times?
+			if _, err := elasticsearch_client.Bulk(reqs); err != nil {
+				//r.cancel()
+				logger.Danger(err)
+				return
+			}
+			reqs = reqs[0:0]
 		}
 
 		if needSavePos {

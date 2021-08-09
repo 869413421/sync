@@ -11,6 +11,7 @@ import (
 	"sync/config"
 	"sync/pkg/logger"
 	"sync/pkg/model/sync_rule"
+	"sync/pkg/runtime_rule"
 )
 
 // ErrRuleNotExist is the error if rule is not defined.
@@ -21,7 +22,7 @@ type River struct {
 
 	syncCh chan interface{}
 
-	rules map[string]*Rule
+	rules map[string]*runtime_rule.Rule
 
 	syncRules []sync_rule.SyncRule
 
@@ -38,7 +39,7 @@ func NewRiver() (*River, error) {
 	//1.初始化管道
 	r := new(River)
 	r.syncCh = make(chan interface{})
-	r.rules = make(map[string]*Rule)
+	r.rules = make(map[string]*runtime_rule.Rule)
 	r.ctx, r.cancel = context.WithCancel(context.Background())
 
 	//2.加载binlog对象
@@ -124,7 +125,7 @@ func (r *River) prepareRule() error {
 	}
 
 	//2.启动前预处理规则
-	rules := make(map[string]*Rule)
+	rules := make(map[string]*runtime_rule.Rule)
 	for key, rule := range r.rules {
 		//2.1获取表详情
 		if rule.TableInfo, err = r.canal.GetTable(rule.Schema, rule.Table); err != nil {
@@ -218,7 +219,7 @@ func (r *River) newRule(schema, table string) error {
 		return errors.New(fmt.Sprintf("生成了重复的规则：%s:%s", schema, table))
 	}
 
-	r.rules[key] = newDefaultRule(schema, table)
+	r.rules[key] = runtime_rule.NewDefaultRule(schema, table)
 	return nil
 }
 

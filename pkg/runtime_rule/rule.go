@@ -1,9 +1,11 @@
-package river
+package runtime_rule
 
 import (
 	"github.com/go-mysql-org/go-mysql/schema"
 	"strings"
 )
+
+const MysqlDateFormat = "2006-01-02"
 
 type Rule struct {
 	Schema string
@@ -22,8 +24,8 @@ type Rule struct {
 	Pipeline string
 }
 
-// newDefaultRule 返回默认规则对象
-func newDefaultRule(schema, table string) *Rule {
+// NewDefaultRule 返回默认规则对象
+func NewDefaultRule(schema, table string) *Rule {
 	rule := new(Rule)
 
 	rule.Schema = schema
