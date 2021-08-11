@@ -46,38 +46,44 @@ func (service *ElasticService) MakeRequest(action string) ([]elastic.BulkableReq
 	reqs := make([]elastic.BulkableRequest, 0, 20)
 	rule := service.Rule
 
-	//2.从监听的binlog中构建数据
-	for _, values := range service.Rows {
-		//2.1获取数据中的主键
-		id, err := service.getDocId(values)
-		if err != nil {
-			return nil, err
-		}
-
-		//2.2获取请求的mapping数据,转换为json
-		mappingData := service.makeInsertReqData(values)
-		body, err := json.Marshal(mappingData)
-		if err != nil {
-			logger.Danger(fmt.Sprintf("make es request json error:%s,data:%v", err, values))
-			continue
-		}
-		requestJson := string(body)
-
-		//2.3 根据触发类型创建请求
-		switch action {
-		case canal.InsertAction:
-			req := elastic.NewBulkIndexRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
-			reqs = append(reqs, req)
-		case canal.UpdateAction:
-			req := elastic.NewBulkUpdateRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
-			reqs = append(reqs, req)
-		case canal.DeleteAction:
-			req := elastic.NewBulkDeleteRequest().Index(rule.Index).Type(rule.Type).Id(id)
-			reqs = append(reqs, req)
-		}
+	var values []interface{}
+	switch action {
+	case canal.InsertAction:
+		values = service.Rows[0]
+	case canal.UpdateAction:
+		values = service.Rows[1]
+	case canal.DeleteAction:
+		values = service.Rows[0]
 	}
 
-	//3.返回请求数组
+	//2.获取数据的主键数据
+	id, err := service.getDocId(values)
+	if err != nil {
+		return nil, err
+	}
+
+	//3获取请求的mapping数据,转换为json
+	mappingData := service.makeInsertReqData(values)
+	body, err := json.Marshal(mappingData)
+	if err != nil {
+		logger.Danger(fmt.Sprintf("make es request json error:%s,data:%v", err, values))
+		return nil, err
+	}
+	requestJson := string(body)
+
+	//4 根据触发类型创建请求
+	switch action {
+	case canal.InsertAction:
+		req := elastic.NewBulkIndexRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
+		reqs = append(reqs, req)
+	case canal.UpdateAction:
+		req := elastic.NewBulkUpdateRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
+		reqs = append(reqs, req)
+	case canal.DeleteAction:
+		req := elastic.NewBulkDeleteRequest().Index(rule.Index).Type(rule.Type).Id(id)
+		reqs = append(reqs, req)
+	}
+
 	return reqs, nil
 }
 
