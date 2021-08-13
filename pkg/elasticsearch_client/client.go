@@ -2,7 +2,6 @@ package elasticsearch_client
 
 import (
 	"context"
-	"fmt"
 	"github.com/olivere/elastic"
 	"sync/config"
 	"sync/pkg/logger"
@@ -14,7 +13,6 @@ var esConfig config.ElasticSearch
 func init() {
 	//1.初始化ES
 	esConfig := config.LoadConfig().ElasticSearch
-	fmt.Println(esConfig)
 	var err error
 	EsClient, err = elastic.NewClient(elastic.SetSniff(false), elastic.SetURL(esConfig.Nodes...), elastic.SetBasicAuth(esConfig.Name, esConfig.Password))
 	if err != nil {
@@ -31,7 +29,5 @@ func Bulk(reqs []elastic.BulkableRequest) (*elastic.BulkResponse, error) {
 	bulk := EsClient.Bulk()
 	bulk.Add(reqs...)
 	do, err := bulk.Do(context.Background())
-	fmt.Println(do)
-	fmt.Println(err)
 	return do, err
 }

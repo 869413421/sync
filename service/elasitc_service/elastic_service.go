@@ -77,7 +77,7 @@ func (service *ElasticService) MakeRequest(action string) ([]elastic.BulkableReq
 		req := elastic.NewBulkIndexRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
 		reqs = append(reqs, req)
 	case canal.UpdateAction:
-		req := elastic.NewBulkUpdateRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson)
+		req := elastic.NewBulkUpdateRequest().Index(rule.Index).Type(rule.Type).Id(id).Doc(requestJson).DocAsUpsert(true)
 		reqs = append(reqs, req)
 	case canal.DeleteAction:
 		req := elastic.NewBulkDeleteRequest().Index(rule.Index).Type(rule.Type).Id(id)
@@ -224,6 +224,5 @@ func (service *ElasticService) MakeReqColumnData(col *schema.TableColumn, value 
 			return vt.Format(runtime_rule.MysqlDateFormat)
 		}
 	}
-
 	return value
 }

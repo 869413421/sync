@@ -37,7 +37,7 @@ func ConnectDB() *gorm.DB {
 
 	//3.连接数据库
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
-		Logger: gloger.Default.LogMode(gloger.Info),
+		Logger: gloger.Default.LogMode(gloger.Error),
 	})
 	if err != nil {
 		logger.Danger(err, "gorm open error")
