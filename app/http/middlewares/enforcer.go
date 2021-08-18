@@ -1,6 +1,7 @@
 package middlewares
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"sync/pkg/enforcer"
@@ -40,6 +41,7 @@ func Enforcer() gin.HandlerFunc {
 			base.ResponseJson(ctx, http.StatusForbidden, "加载策略失败", []string{})
 			return
 		}
+		fmt.Println(sub,obj,act)
 		if ok, _ := e.Enforce(sub, obj, act); ok {
 			//4，1 放行
 			ctx.Next()

@@ -30,8 +30,10 @@ func Run() {
 	//3.初始化数据库
 	SetupDB()
 
-	r, _ := river.NewRiver()
-	r.Run()
+	go func() {
+		r, _ := river.NewRiver()
+		r.Run()
+	}()
 
 	//4.如果是测试，不启动监听
 	if config.App.RunTest {
