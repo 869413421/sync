@@ -14,6 +14,14 @@ type UserController struct {
 	BaseController
 }
 
+//type RequestJson struct {
+//	Name     string `json:"Name"`
+//	Avatar   string `json:"Avatar"`
+//	Email    string `json:"email"`
+//	Password string `json:"Password"`
+//	Status   int    `json:"Status"`
+//}
+
 func NewUserController() *UserController {
 	return &UserController{}
 }
@@ -94,10 +102,6 @@ func (controller *UserController) Store(ctx *gin.Context) {
 func (controller *UserController) Update(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
-	name := ctx.Request.PostFormValue("name")
-	email := ctx.Request.PostFormValue("email")
-	password := ctx.Request.PostFormValue("password")
-	avatar := ctx.Request.PostFormValue("avatar")
 
 	//2.构建用户信息
 	_user, err := user.GetByID(types.StringToUInt64(id))
@@ -105,10 +109,7 @@ func (controller *UserController) Update(ctx *gin.Context) {
 		controller.ResponseJson(ctx, http.StatusForbidden, "user not found", _user)
 		return
 	}
-	_user.Name = name
-	_user.Email = email
-	_user.Password = password
-	_user.Avatar = avatar
+	ctx.BindJSON(&_user)
 
 	//3.验证提交信息
 	errs := requests.ValidateUserEditForm(_user)

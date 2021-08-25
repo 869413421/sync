@@ -12,9 +12,9 @@ import (
 )
 
 type BaseModel struct {
-	ID        uint64    `gorm:"column:id;primaryKey;autoIncrement;not null"`
-	CreatedAt time.Time `gorm:"column:created_at;index"`
-	UpdatedAt time.Time `gorm:"column:updated_at;index"`
+	ID        uint64    `gorm:"column:id;primaryKey;autoIncrement;not null" json:"id"`
+	CreatedAt time.Time `gorm:"column:created_at;index" json:"created_at"`
+	UpdatedAt time.Time `gorm:"column:updated_at;index" json:"updated_at"`
 }
 
 func (model BaseModel) GetStringID() string {

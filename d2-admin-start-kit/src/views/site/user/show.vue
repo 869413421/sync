@@ -11,38 +11,42 @@
         size="small"
         style="width: 50%; margin: auto"
       >
-        <el-form-item label="头像" prop="avatar" style="text-align: center">
+        <el-form-item label="头像" prop="Avatar" style="text-align: center">
           <el-upload
             class="avatar-uploader"
             action="https://jsonplaceholder.typicode.com/posts/"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload"
           >
-            <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+            <img v-if="ruleForm.Avatar" :src="ruleForm.Avatar" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="用户名称" prop="name">
-          <el-input v-model="name" placeholder="请输入用户名称"></el-input>
-        </el-form-item>
-
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="email" placeholder="请输入用户邮箱"></el-input>
-        </el-form-item>
-
-        <el-form-item label="用户密码" prop="password">
+        <el-form-item label="用户名称" prop="Name">
           <el-input
-            v-model="password"
+            v-model="ruleForm.Name"
+            placeholder="请输入用户名称"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱" prop="Email">
+          <el-input
+            v-model="ruleForm.Email"
+            placeholder="请输入用户邮箱"
+          ></el-input>
+        </el-form-item>
+
+        <el-form-item label="用户密码" prop="Password" v-show="!edit">
+          <el-input
+            v-model="ruleForm.Password"
             placeholder="请输入密码"
             show-password
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="用户状态" prop="status">
-          <el-radio v-model="status" label="0">正常</el-radio>
-          <el-radio v-model="status" label="1">禁用</el-radio>
+        <el-form-item label="用户状态" prop="Status">
+          <el-radio v-model="ruleForm.Status" :label="0">正常</el-radio>
+          <el-radio v-model="ruleForm.Status" :label="1">禁用</el-radio>
         </el-form-item>
 
         <el-form-item>
@@ -82,64 +86,78 @@
 </style>
 
 <script>
+import api from "@/api";
 export default {
   name: "user.show",
   data() {
+    // 邮箱
+    var checkEmail = (rule, value, callback) => {
+      const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+      if (!value) {
+        return callback(new Error("邮箱不能为空"));
+      }
+      setTimeout(() => {
+        if (mailReg.test(value)) {
+          callback();
+        } else {
+          callback(new Error("请输入正确的邮箱格式"));
+        }
+      }, 100);
+    };
     return {
+      id: 0,
+      edit: false,
       ruleForm: {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: "",
+        Name: "",
+        Avatar: "",
+        Password: "",
+        Status: "",
+        Email: "",
+        CreatedAt: "",
+        updated_at: "",
       },
       rules: {
-        name: [
-          { required: true, message: "请输入活动名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
+        Name: [
+          { required: true, message: "请输入用户名称", trigger: "blur" },
+          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" },
         ],
-        region: [
-          { required: true, message: "请选择活动区域", trigger: "change" },
+        Avatar: [
+          { required: true, message: "请上传用户头像", trigger: "blur" },
+          { min: 2, max: 1000, message: "长度在 2 到 1000 个字符", trigger: "blur" },
         ],
-        date1: [
+        Password: [
+          { required: true, message: "请输入用户密码", trigger: "blur" },
           {
-            type: "date",
-            required: true,
-            message: "请选择日期",
-            trigger: "change",
+            min: 8,
+            max: 20,
+            message: "长度在 8 到 20 个字符",
+            trigger: "blur",
           },
         ],
-        date2: [
-          {
-            type: "date",
-            required: true,
-            message: "请选择时间",
-            trigger: "change",
-          },
+        Status: [
+          { required: true, message: "请选择用户状态", trigger: "blur" },
         ],
-        type: [
-          {
-            type: "array",
-            required: true,
-            message: "请至少选择一个活动性质",
-            trigger: "change",
-          },
-        ],
-        resource: [
-          { required: true, message: "请选择活动资源", trigger: "change" },
-        ],
-        desc: [{ required: true, message: "请填写活动形式", trigger: "blur" }],
+        Email: [{ validator: checkEmail, trigger: "blur" }],
       },
     };
   },
+  mounted() {
+    this.id = this.$route.params.id;
+    if (this.id > 0) {
+      this.edit = true;
+      this.show();
+    }
+  },
   methods: {
     submitForm(formName) {
+      if(this.edit){
+        this.rules.Password=[]
+      }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          if (this.edit){
+            this.update()
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -148,6 +166,21 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    async show() {
+      const res = await api.SYS_USER_INFO(this.id);
+      console.log(res);
+      this.ruleForm = res;
+    },
+    async update() {
+      const res = await api.SYS_USER_UPDATE(this.id,this.ruleForm);
+      console.log(res);
+      this.ruleForm = res;
+    }, 
+    async store() {
+      const res = await api.SYS_USER_INFO(this.id);
+      console.log(res);
+      this.ruleForm = res;
     },
   },
 };

@@ -29,6 +29,10 @@ func ValidateUserEditForm(data user.User) map[string][]string {
 		},
 	}
 
+	if data.ID > 0 {
+		delete(rules,"password")
+	}
+
 	messages := govalidator.MapData{
 		"name": []string{
 			"required：用户名为必填选项",
