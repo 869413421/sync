@@ -3,10 +3,9 @@
     <template slot="header">用户管理</template>
     <template>
       <el-table :data="tableData" border style="width: 100%">
-        <el-table-column label="日期">
+        <el-table-column label="头像">
           <template slot-scope="scope">
-            <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.CreatedAt }}</span>
+            <el-avatar size="small" :src="scope.row.Avatar"></el-avatar>
           </template>
         </el-table-column>
         <el-table-column label="姓名">
@@ -18,6 +17,12 @@
                 <el-tag size="medium">{{ scope.row.Name }}</el-tag>
               </div>
             </el-popover>
+          </template>
+        </el-table-column>
+        <el-table-column label="创建时间">
+          <template slot-scope="scope">
+            <i class="el-icon-time"></i>
+            <span style="margin-left: 10px">{{ scope.row.CreatedAt }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -34,8 +39,18 @@
           </template>
         </el-table-column>
       </el-table>
-    </template></d2-container
-  >
+      <el-pagination
+        style="margin-top: 1%"
+        background
+        layout="prev, pager, next"
+        :page-size="1"
+        :current-page="currentPage"
+        :total="total"
+        @current-change="getList"
+      >
+      </el-pagination>
+    </template>
+  </d2-container>
 </template>
   </d2-container>
 </template>
@@ -47,16 +62,23 @@ export default {
   data() {
     return {
       tableData: [],
+      currentPage: 1,
+      total: 0,
     };
   },
   mounted() {
-    this.getList(1)
+    this.getList(1);
   },
   methods: {
     async getList(page) {
-      const res = await api.SYS_USER_LIST(1);
+      const res = await api.SYS_USER_LIST(page);
       console.log(res);
       this.tableData = res.users;
+      this.currentPage = res.PagerData.Current.Number;
+      this.total = res.PagerData.TotalCount;
+    },
+    handleEdit(index, row) {
+      this.$router.push("/user/" + row.ID);
     },
   },
 };
