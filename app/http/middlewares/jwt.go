@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
@@ -15,8 +14,6 @@ func Jwt() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		//1.获取token
 		token := ctx.GetHeader("Authorization")
-		fmt.Println("token")
-		fmt.Println(token)
 		if token != "" {
 			tokenS := strings.Split(token, " ")
 			token = tokenS[1]

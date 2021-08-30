@@ -5,16 +5,16 @@
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column label="头像">
           <template slot-scope="scope">
-            <el-avatar size="small" :src="scope.row.Avatar"></el-avatar>
+            <el-avatar size="small" :src="scope.row.avatar"></el-avatar>
           </template>
         </el-table-column>
         <el-table-column label="姓名">
           <template slot-scope="scope">
             <el-popover trigger="hover" placement="top">
-              <p>姓名: {{ scope.row.Name }}</p>
-              <p>邮箱: {{ scope.row.Email }}</p>
+              <p>姓名: {{ scope.row.name }}</p>
+              <p>邮箱: {{ scope.row.email }}</p>
               <div slot="reference" class="name-wrapper">
-                <el-tag size="medium">{{ scope.row.Name }}</el-tag>
+                <el-tag size="medium">{{ scope.row.name }}</el-tag>
               </div>
             </el-popover>
           </template>
@@ -22,7 +22,7 @@
         <el-table-column label="创建时间">
           <template slot-scope="scope">
             <i class="el-icon-time"></i>
-            <span style="margin-left: 10px">{{ scope.row.CreatedAt }}</span>
+            <span style="margin-left: 10px">{{ scope.row.created_at }}</span>
           </template>
         </el-table-column>
         <el-table-column label="操作">
@@ -78,7 +78,7 @@ export default {
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push("/user/" + row.ID);
+      this.$router.push("/user/" + row.id);
     },
   },
 };

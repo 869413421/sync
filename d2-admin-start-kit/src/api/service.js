@@ -1,27 +1,39 @@
 import axios from 'axios'
 import Adapter from 'axios-mock-adapter'
-import { get } from 'lodash'
+import { before, get } from 'lodash'
 import util from '@/libs/util'
 import { errorLog, errorCreate } from './tools'
+import { Loading } from 'element-ui';
 
 /**
  * @description 创建请求实例
  */
-function createService () {
+function createService() {
+  var loading = null
   // 创建一个 axios 实例
   const service = axios.create()
   // 请求拦截
   service.interceptors.request.use(
-    config => config,
+    config => {
+      loading = Loading.service({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+      return config;
+    },
     error => {
       // 发送失败
       console.log(error)
       return Promise.reject(error)
     }
   )
+
   // 响应拦截
   service.interceptors.response.use(
     response => {
+      loading.close()
       // dataAxios 是 axios 返回数据中的 data
       const dataAxios = response.data
       // 这个状态码是和后端约定的
@@ -48,6 +60,7 @@ function createService () {
       }
     },
     error => {
+      loading.close()
       const status = get(error, 'response.status')
       switch (status) {
         case 400: error.message = '请求错误'; break
@@ -74,7 +87,7 @@ function createService () {
  * @description 创建请求方法
  * @param {Object} service axios 实例
  */
-function createRequestFunction (service) {
+function createRequestFunction(service) {
   return function (config) {
     const token = util.cookies.get('token')
     const configDefault = {

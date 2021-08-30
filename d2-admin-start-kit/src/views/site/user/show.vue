@@ -11,42 +11,45 @@
         size="small"
         style="width: 50%; margin: auto"
       >
-        <el-form-item label="头像" prop="Avatar" style="text-align: center">
+        <el-form-item label="头像" prop="avatar" style="text-align: center">
           <el-upload
             class="avatar-uploader"
-            action="https://jsonplaceholder.typicode.com/posts/"
+            :headers="{
+        Authorization: 'Bearer ' + token,
+      },"
+            :action="uploadPath"
             :show-file-list="false"
           >
-            <img v-if="ruleForm.Avatar" :src="ruleForm.Avatar" class="avatar" />
+            <img v-if="ruleForm.avatar" :src="ruleForm.avatar" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
 
-        <el-form-item label="用户名称" prop="Name">
+        <el-form-item label="用户名称" prop="name">
           <el-input
-            v-model="ruleForm.Name"
+            v-model="ruleForm.name"
             placeholder="请输入用户名称"
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="邮箱" prop="Email">
+        <el-form-item label="邮箱" prop="email">
           <el-input
-            v-model="ruleForm.Email"
+            v-model="ruleForm.email"
             placeholder="请输入用户邮箱"
           ></el-input>
         </el-form-item>
 
         <el-form-item label="用户密码" prop="Password" v-show="!edit">
           <el-input
-            v-model="ruleForm.Password"
+            v-model="ruleForm.password"
             placeholder="请输入密码"
             show-password
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="用户状态" prop="Status">
-          <el-radio v-model="ruleForm.Status" :label="0">正常</el-radio>
-          <el-radio v-model="ruleForm.Status" :label="1">禁用</el-radio>
+        <el-form-item label="用户状态" prop="status">
+          <el-radio v-model="ruleForm.status" :label="0">正常</el-radio>
+          <el-radio v-model="ruleForm.status" :label="1">禁用</el-radio>
         </el-form-item>
 
         <el-form-item>
@@ -107,25 +110,36 @@ export default {
     return {
       id: 0,
       edit: false,
+      uploadPath:'',
       ruleForm: {
-        Name: "",
-        Avatar: "",
-        Password: "",
-        Status: "",
-        Email: "",
-        CreatedAt: "",
+        name: "",
+        avatar: "",
+        password: "",
+        status: "",
+        email: "",
+        created_at: "",
         updated_at: "",
       },
       rules: {
-        Name: [
+        name: [
           { required: true, message: "请输入用户名称", trigger: "blur" },
-          { min: 2, max: 10, message: "长度在 2 到 10 个字符", trigger: "blur" },
+          {
+            min: 2,
+            max: 10,
+            message: "长度在 2 到 10 个字符",
+            trigger: "blur",
+          },
         ],
-        Avatar: [
+        avatar: [
           { required: true, message: "请上传用户头像", trigger: "blur" },
-          { min: 2, max: 1000, message: "长度在 2 到 1000 个字符", trigger: "blur" },
+          {
+            min: 2,
+            max: 1000,
+            message: "长度在 2 到 1000 个字符",
+            trigger: "blur",
+          },
         ],
-        Password: [
+        password: [
           { required: true, message: "请输入用户密码", trigger: "blur" },
           {
             min: 8,
@@ -134,14 +148,15 @@ export default {
             trigger: "blur",
           },
         ],
-        Status: [
+        status: [
           { required: true, message: "请选择用户状态", trigger: "blur" },
         ],
-        Email: [{ validator: checkEmail, trigger: "blur" }],
+        email: [{ validator: checkEmail, trigger: "blur" }],
       },
     };
   },
   mounted() {
+    this.uploadPath=process.env.VUE_APP_API+"/image"
     this.id = this.$route.params.id;
     if (this.id > 0) {
       this.edit = true;
@@ -150,13 +165,13 @@ export default {
   },
   methods: {
     submitForm(formName) {
-      if(this.edit){
-        this.rules.Password=[]
+      if (this.edit) {
+        this.rules.Password = [];
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          if (this.edit){
-            this.update()
+          if (this.edit) {
+            this.update();
           }
         } else {
           console.log("error submit!!");
@@ -173,10 +188,15 @@ export default {
       this.ruleForm = res;
     },
     async update() {
-      const res = await api.SYS_USER_UPDATE(this.id,this.ruleForm);
-      console.log(res);
+      const res = await api.SYS_USER_UPDATE(this.id, this.ruleForm);
       this.ruleForm = res;
-    }, 
+      this.$notify({
+        title: "成功",
+        message: "更新成功",
+        type: "success",
+        duration: 2000,
+      });
+    },
     async store() {
       const res = await api.SYS_USER_INFO(this.id);
       console.log(res);
