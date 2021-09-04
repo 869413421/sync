@@ -14,11 +14,10 @@
         <el-form-item label="头像" prop="avatar" style="text-align: center">
           <el-upload
             class="avatar-uploader"
-            :headers="{
-        Authorization: 'Bearer ' + token,
-      },"
+            :headers="uploadHead"
             :action="uploadPath"
             :show-file-list="false"
+            :on-success="handleAvatarSuccess"
           >
             <img v-if="ruleForm.avatar" :src="ruleForm.avatar" class="avatar" />
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -90,6 +89,7 @@
 
 <script>
 import api from "@/api";
+import util from "@/libs/util";
 export default {
   name: "user.show",
   data() {
@@ -110,7 +110,8 @@ export default {
     return {
       id: 0,
       edit: false,
-      uploadPath:'',
+      uploadPath: "",
+      uploadHead: {},
       ruleForm: {
         name: "",
         avatar: "",
@@ -156,7 +157,10 @@ export default {
     };
   },
   mounted() {
-    this.uploadPath=process.env.VUE_APP_API+"/image"
+    this.uploadPath = process.env.VUE_APP_API + "/image";
+    this.uploadHead = {
+      Authorization: "Bearer " + util.cookies.get("token"),
+    };
     this.id = this.$route.params.id;
     if (this.id > 0) {
       this.edit = true;
@@ -172,6 +176,8 @@ export default {
         if (valid) {
           if (this.edit) {
             this.update();
+          } else {
+            this.store();
           }
         } else {
           console.log("error submit!!");
@@ -179,12 +185,14 @@ export default {
         }
       });
     },
+    handleAvatarSuccess(res, file) {
+      this.ruleForm.avatar = res.data;
+    },
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
     async show() {
       const res = await api.SYS_USER_INFO(this.id);
-      console.log(res);
       this.ruleForm = res;
     },
     async update() {
@@ -198,9 +206,16 @@ export default {
       });
     },
     async store() {
-      const res = await api.SYS_USER_INFO(this.id);
-      console.log(res);
-      this.ruleForm = res;
+      const res = await api.SYS_USER_STORE(this.ruleForm);
+      this.$notify({
+        title: "成功",
+        message: "新增成功",
+        type: "success",
+        duration: 2000,
+      });
+      setTimeout(() => {
+        this.$router.replace({ name: "user.show", params: { id: res.id } });
+      }, 2000);
     },
   },
 };

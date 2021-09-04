@@ -66,35 +66,26 @@ func (controller *UserController) Show(ctx *gin.Context) {
 
 // Store 新增用户
 func (controller *UserController) Store(ctx *gin.Context) {
-	//1.获取请求参数
-	name := ctx.Request.PostFormValue("name")
-	email := ctx.Request.PostFormValue("email")
-	password := ctx.Request.PostFormValue("password")
-	avatar := ctx.Request.PostFormValue("avatar")
 
-	//2.构建用户信息
-	_user := user.User{
-		Name:     name,
-		Email:    email,
-		Password: password,
-		Avatar:   avatar,
-	}
+	//1.构建用户信息
+	_user := user.User{}
+	ctx.ShouldBind(&_user)
 
-	//3.验证提交信息
+	//2.验证提交信息
 	errs := requests.ValidateUserEditForm(_user)
 	if len(errs) > 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
-	//4.新建用户
+	//3.新建用户
 	err := _user.Store()
 	if err != nil {
 		controller.ResponseJson(ctx, http.StatusForbidden, "新建用户失败", err)
 		return
 	}
 
-	//5.更新成功，响应信息
+	//4.更新成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", _user)
 }
 
@@ -109,7 +100,7 @@ func (controller *UserController) Update(ctx *gin.Context) {
 		controller.ResponseJson(ctx, http.StatusForbidden, "user not found", _user)
 		return
 	}
-	ctx.BindJSON(&_user)
+	ctx.ShouldBind(&_user)
 
 	//3.验证提交信息
 	errs := requests.ValidateUserEditForm(_user)

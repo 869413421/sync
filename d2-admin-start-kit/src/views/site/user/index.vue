@@ -43,7 +43,7 @@
         style="margin-top: 1%"
         background
         layout="prev, pager, next"
-        :page-size="1"
+        :page-size="10"
         :current-page="currentPage"
         :total="total"
         @current-change="getList"

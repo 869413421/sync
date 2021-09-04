@@ -33,5 +33,17 @@ export default ({ request }) => ({
       method: 'put',
       data: data
     })
+  },
+  /**
+  * @description 新增用户
+  * @param {Object} data 用户信息
+  */
+  SYS_USER_STORE(data) {
+    // 接口请求
+    return request({
+      url: '/user',
+      method: 'post',
+      data: data
+    })
   }
 })
