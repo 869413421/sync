@@ -1,6 +1,9 @@
 <template>
   <d2-container>
-    <template slot="header">用户管理</template>
+    <template slot="header"
+      >用户管理
+      <el-button type="primary" style="float: right" @click="showEdit">新增用户</el-button>
+    </template>
     <template>
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column label="头像">
@@ -78,7 +81,10 @@ export default {
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push("/user/" + row.id);
+       this.$router.push({ name: "user.show", params: { id: row.id } });
+    },
+    showEdit() {
+      this.$router.push({ name: "user.show", params: { id: 0 } });
     },
   },
 };

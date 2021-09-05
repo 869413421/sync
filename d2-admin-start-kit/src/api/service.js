@@ -9,7 +9,7 @@ import { Loading } from 'element-ui';
  * @description 创建请求实例
  */
 function createService() {
-  var loading = null
+  let loading = null
   // 创建一个 axios 实例
   const service = axios.create()
   // 请求拦截
@@ -48,24 +48,34 @@ function createService() {
           case 200:
             // [ 示例 ] code === 0 代表没有错误
             return dataAxios.data
-          case 'xxx':
+          case 403:
             // [ 示例 ] 其它和后台约定的 code
-            errorCreate(`[ code: xxx ] ${dataAxios.msg}: ${response.config.url}`)
+            errorCreate(`[ code: 403 ] ${dataAxios.errorMsg}: ${response.config.url}`)
             break
           default:
             // 不是正确的 code
-            errorCreate(`${dataAxios.msg}: ${response.config.url}`)
+            errorCreate(`${dataAxios.errorMsg}: ${response.config.url}`)
             break
         }
       }
     },
     error => {
       loading.close()
+      const dataAxios = get(error, 'response.data')
       const status = get(error, 'response.status')
       switch (status) {
         case 400: error.message = '请求错误'; break
         case 401: error.message = '未授权，请登录'; break
-        case 403: error.message = '拒绝访问'; break
+        case 403:
+          if (dataAxios.errorMsg == "validate error") {
+            let fieldStr = ""
+            for (let key in dataAxios.data) {
+              fieldStr += dataAxios.data[key] + ";"
+            }
+            error.message = '表单验证失败,' + fieldStr
+            break
+          }
+          error.message = '拒绝访问'; break
         case 404: error.message = `请求地址出错: ${error.response.config.url}`; break
         case 408: error.message = '请求超时'; break
         case 500: error.message = '服务器内部错误'; break
