@@ -33,4 +33,6 @@ func migration(db *gorm.DB) {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.Set("gorm:table_options", "Charset=utf8")
 	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{})
+	db.Exec("ALTER TABLE `sync`.`casbin_rule` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT '' AFTER `v5`;")
+	db.Exec("ALTER TABLE `sync`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;")
 }
