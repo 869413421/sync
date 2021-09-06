@@ -3,6 +3,7 @@ package casbin_rule
 var CasbinRuleTable = "casbin_rule"
 
 type CasbinRule struct {
+	ID    uint64 `json:"id"`
 	Ptype string `valid:"ptype" json:"ptype"`
 	V0    string `valid:"v0" json:"v_0"`
 	V1    string `valid:"v1" json:"v_1"`

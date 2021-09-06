@@ -14,10 +14,10 @@ export default ({ request }) => ({
    * @description 获取用户详情
    * @param {BigInteger} id 用户ID
    */
-  SYS_USER_INFO(id) {
+  SYS_CASBIN_INFO(id) {
     // 接口请求
     return request({
-      url: '/user/' + id,
+      url: '/casbin/' + id,
       method: 'get'
     })
   },
@@ -26,10 +26,10 @@ export default ({ request }) => ({
    * @param {BigInteger} id 用户ID
    * @param {Object} data 用户信息
    */
-  SYS_USER_UPDATE(id, data) {
+  SYS_CASBIN_UPDATE(id, data) {
     // 接口请求
     return request({
-      url: '/user/' + id,
+      url: '/casbin/' + id,
       method: 'put',
       data: data
     })
@@ -38,10 +38,10 @@ export default ({ request }) => ({
   * @description 新增用户
   * @param {Object} data 用户信息
   */
-  SYS_USER_STORE(data) {
+  SYS_CASBIN_STORE(data) {
     // 接口请求
     return request({
-      url: '/user',
+      url: '/casbin',
       method: 'post',
       data: data
     })

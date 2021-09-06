@@ -90,6 +90,7 @@
 <script>
 import api from "@/api";
 import util from "@/libs/util";
+import { mapState, mapActions } from "vuex";
 export default {
   name: "user.show",
   data() {
@@ -167,7 +168,14 @@ export default {
       this.show();
     }
   },
+  computed: {
+    ...mapState("d2admin/page", [
+      "opened",
+      "current", //用户获取当前页面的地址，用于关闭
+    ]),
+  },
   methods: {
+    ...mapActions("d2admin/page", ["close"]),
     submitForm(formName) {
       if (this.edit) {
         this.rules.Password = [];
@@ -214,7 +222,9 @@ export default {
         duration: 2000,
       });
       setTimeout(() => {
-        this.$router.replace({ name: "user.show", params: { id: res.id } });
+        let tagName = this.current;
+        console.log(tagName);
+        this.close({ tagName });
       }, 2000);
     },
   },

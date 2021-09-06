@@ -75,7 +75,7 @@ function createService() {
             error.message = '表单验证失败,' + fieldStr
             break
           }
-          error.message = '拒绝访问'; break
+          error.message =dataAxios.errorMsg; break
         case 404: error.message = `请求地址出错: ${error.response.config.url}`; break
         case 408: error.message = '请求超时'; break
         case 500: error.message = '服务器内部错误'; break

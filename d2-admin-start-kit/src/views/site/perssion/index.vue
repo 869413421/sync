@@ -3,7 +3,7 @@
     <template slot="header"
       >权限管理
       <el-button type="primary" style="float: right" @click="showEdit"
-        >权限角色</el-button
+        >新增权限</el-button
       >
     </template>
     <template>
@@ -79,10 +79,10 @@ export default {
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push({ name: "user.show", params: { id: row.id } });
+      this.$router.push({ name: "perssion.show", params: { id: row.id } });
     },
     showEdit() {
-      this.$router.push({ name: "user.show", params: { id: 0 } });
+      this.$router.push({ name: "perssion.show", params: { id: 0 } });
     },
   },
 };

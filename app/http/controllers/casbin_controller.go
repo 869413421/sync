@@ -9,6 +9,7 @@ import (
 	"sync/pkg/logger"
 	"sync/pkg/model/casbin_rule"
 	"sync/pkg/types"
+	"sync/service/casbin_service"
 )
 
 type CasbinController struct {
@@ -65,40 +66,24 @@ func (controller *CasbinController) Show(ctx *gin.Context) {
 // Store 新增规则
 func (controller *CasbinController) Store(ctx *gin.Context) {
 	//1.获取请求参数
-	ptype := ctx.Request.PostFormValue("ptype")
-	v0 := ctx.Request.PostFormValue("v0")
-	v1 := ctx.Request.PostFormValue("v1")
-	v2 := ctx.Request.PostFormValue("v2")
-	v3 := ctx.Request.PostFormValue("v3")
-	v4 := ctx.Request.PostFormValue("v4")
-	v5 := ctx.Request.PostFormValue("v5")
+	_rule := casbin_rule.CasbinRule{}
+	ctx.ShouldBind(&_rule)
 
-	//2.构建规则信息
-	_rule := casbin_rule.CasbinRule{
-		Ptype: ptype,
-		V0:    v0,
-		V1:    v1,
-		V2:    v2,
-		V3:    v3,
-		V4:    v4,
-		V5:    v5,
-	}
-
-	//3.验证提交信息
+	//2.验证提交信息
 	errs := requests.ValidateRuleEditForm(_rule)
 	if len(errs) > 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
-	//4.新建用户
+	//3.规则
 	err := _rule.Store()
 	if err != nil {
 		controller.ResponseJson(ctx, http.StatusForbidden, "新建规则失败", err)
 		return
 	}
 
-	//5.更新成功，响应信息
+	//4.更新成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", _rule)
 }
 
@@ -106,13 +91,6 @@ func (controller *CasbinController) Store(ctx *gin.Context) {
 func (controller *CasbinController) Update(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
-	ptype := ctx.Request.PostFormValue("ptype")
-	v0 := ctx.Request.PostFormValue("v0")
-	v1 := ctx.Request.PostFormValue("v1")
-	v2 := ctx.Request.PostFormValue("v2")
-	v3 := ctx.Request.PostFormValue("v3")
-	v4 := ctx.Request.PostFormValue("v4")
-	v5 := ctx.Request.PostFormValue("v5")
 
 	//2.构建用户信息
 	_rule, err := casbin_rule.GetByID(types.StringToUInt64(id))
@@ -120,13 +98,7 @@ func (controller *CasbinController) Update(ctx *gin.Context) {
 		controller.ResponseJson(ctx, http.StatusForbidden, "rule not found", []string{})
 		return
 	}
-	_rule.Ptype = ptype
-	_rule.V0 = v0
-	_rule.V1 = v1
-	_rule.V2 = v2
-	_rule.V3 = v3
-	_rule.V4 = v4
-	_rule.V5 = v5
+	ctx.ShouldBind(&_rule)
 
 	//3.验证提交信息
 	errs := requests.ValidateRuleEditForm(_rule)
@@ -138,7 +110,7 @@ func (controller *CasbinController) Update(ctx *gin.Context) {
 	//4.更新规则
 	rowsAffected, err := _rule.Update()
 	if rowsAffected == 0 {
-		controller.ResponseJson(ctx, http.StatusForbidden, "更新规则失败", err)
+		controller.ResponseJson(ctx, http.StatusForbidden, "更新规则失败,没有任何更改", err)
 		return
 	}
 
@@ -167,4 +139,9 @@ func (controller *CasbinController) Delete(ctx *gin.Context) {
 
 	//5.删除成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
+}
+
+// Tree 获取权限树木
+func (controller *CasbinController) Tree(ctx *gin.Context)  {
+	casbin_service.GetPerssionTree()
 }

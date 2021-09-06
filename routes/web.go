@@ -40,6 +40,7 @@ func RegisterWebRoutes(router *gin.Engine) {
 	{
 		casbinApi.GET("", casbinController.Index)
 		casbinApi.GET("/:id", casbinController.Show)
+		casbinApi.GET("/tree", casbinController.Tree)
 		casbinApi.POST("", casbinController.Store)
 		casbinApi.PUT("/:id", casbinController.Update)
 		casbinApi.DELETE("/:id", casbinController.Delete)

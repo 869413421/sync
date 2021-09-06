@@ -13,7 +13,6 @@ func ValidateRuleEditForm(data casbin_rule.CasbinRule) map[string][]string {
 			"between:1,10",
 		},
 		"v0": []string{
-			"required",
 			"alpha_num",
 			"between:1,30",
 		},
@@ -37,6 +36,14 @@ func ValidateRuleEditForm(data casbin_rule.CasbinRule) map[string][]string {
 		"v5": []string{
 			"alpha_num",
 			"between:1,30",
+		},
+		"name":[]string{
+			"required",
+			"between:2,255",
+		},
+		"desc":[]string{
+			"required",
+			"between:2,255",
 		},
 	}
 

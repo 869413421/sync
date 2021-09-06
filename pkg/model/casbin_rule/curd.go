@@ -34,6 +34,17 @@ func GetByID(id uint64) (rule CasbinRule, err error) {
 	return
 }
 
+// GetList 根据条件获取列表
+func GetList(where map[string]interface{}) []CasbinRule {
+	db:=model.DB.Table(CasbinRuleTable)
+	for key,val:=range where{
+		db.Where(key+"=?",val)
+	}
+	var rules = []CasbinRule{}
+	db.Scan(&rules)
+	return rules
+}
+
 // Store 新增规则
 func (rule *CasbinRule) Store() (err error) {
 	result := model.DB.Table(CasbinRuleTable).Create(&rule)
@@ -67,3 +78,5 @@ func (rule *CasbinRule) Delete() (rowsAffected int64, err error) {
 	rowsAffected = result.RowsAffected
 	return
 }
+
+
