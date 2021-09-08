@@ -41,6 +41,15 @@
           ></el-input>
         </el-form-item>
 
+        <el-form-item label="父级路由" prop="parent_id">
+          <el-cascader
+            v-model="ruleForm.parent_id"
+            :options="permssionTree"
+            :props="{ checkStrictly: true }"
+            clearable
+          ></el-cascader>
+        </el-form-item>
+
         <el-form-item>
           <el-button type="primary" @click="submitForm('ruleForm')"
             >保存</el-button
@@ -94,6 +103,7 @@ export default {
         name: "",
         desc: "",
         ptype: "p",
+        parent_id:0,
       },
       rules: {
         name: [

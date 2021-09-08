@@ -13,5 +13,5 @@ type CasbinRule struct {
 	V5       string `valid:"v5" json:"v_5"`
 	Name     string `valid:"name" json:"name"`
 	DESC     string `valid:"desc" json:"desc"`
-	ParentId uint64 `valid:"desc" json:"parent_id"`
+	ParentId uint64 `valid:"parent_id" json:"parent_id"`
 }

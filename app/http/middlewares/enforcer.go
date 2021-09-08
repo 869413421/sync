@@ -25,8 +25,6 @@ func Enforcer() gin.HandlerFunc {
 		value, authed := ctx.Get("authUser")
 		if authed {
 			_user := value.(user.User)
-			fmt.Println("用户")
-			fmt.Println(_user)
 			roles, err := e.GetRolesForUser(_user.Name)
 			if err != nil {
 				logger.Danger(err, "get roles error")

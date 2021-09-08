@@ -13,24 +13,24 @@ func GetPermissionTree() []interface{} {
 	rules := GetList(where)
 
 	//2.构建权限树
-	tree := getTreeByList(0, &rules)
+	tree := getTreeByList(0, rules)
 
 	//3.返回数据
 	return tree
 }
 
 // getTreeByList 根据list构建权限树
-func getTreeByList(parentId uint64, rules *[]CasbinRule) []interface{} {
+func getTreeByList(parentId uint64, rules []CasbinRule) []interface{} {
 	//1.创建一个切片
 	var data []interface{}
 
 	//2.递归构建新数据
-	for _, rule := range *rules {
+	for _, rule := range rules {
 		if rule.ParentId == parentId {
 			item := make(map[string]interface{})
-			item["id"] = rule.ID
-			item["name"] = rule.Name
-			item["child"] = getTreeByList(rule.ID, rules)
+			item["value"] = rule.ID
+			item["label"] = rule.Name
+			item["children"] = getTreeByList(rule.ID, rules)
 			data = append(data, item)
 		}
 	}
