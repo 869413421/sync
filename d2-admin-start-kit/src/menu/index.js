@@ -23,7 +23,7 @@ export const menuHeader = supplementPath([
     children: [
       { path: '/user', title: '用户' },
       { path: '/role', title: '角色' },
-      { path: '/perssion', title: '权限' }
+      { path: '/permssion', title: '权限' }
     ]
   }
 ])
@@ -36,7 +36,7 @@ export const menuAside = supplementPath([
     children: [
       { path: '/user', title: '用户' },
       { path: '/role', title: '角色' },
-      { path: '/perssion', title: '权限' }
+      { path: '/permssion', title: '权限' }
     ]
   }
 ])

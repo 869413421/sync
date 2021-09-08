@@ -1,6 +1,7 @@
 package bootstarp
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"sync/config"
 	"sync/pkg/model"
@@ -33,6 +34,9 @@ func migration(db *gorm.DB) {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.Set("gorm:table_options", "Charset=utf8")
 	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{})
-	db.Exec("ALTER TABLE `sync`.`casbin_rule` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT '' AFTER `v5`;")
-	db.Exec("ALTER TABLE `sync`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;")
+
+	database := config.LoadConfig().Db.Database
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT '' AFTER `v5`;", database))
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;",database))
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_id` INT(11) NOT NULL DEFAULT 0 AFTER `desc`;",database))
 }

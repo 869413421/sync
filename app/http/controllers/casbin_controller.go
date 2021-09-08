@@ -124,7 +124,7 @@ func (controller *CasbinController) Delete(ctx *gin.Context) {
 	id := ctx.Param("id")
 
 	//2.构建规则信息
-	_rule, err :=  casbin_rule.GetByID(types.StringToUInt64(id))
+	_rule, err := casbin_rule.GetByID(types.StringToUInt64(id))
 	if err == gorm.ErrRecordNotFound {
 		controller.ResponseJson(ctx, http.StatusForbidden, "user not found", err)
 		return
@@ -142,6 +142,10 @@ func (controller *CasbinController) Delete(ctx *gin.Context) {
 }
 
 // Tree 获取权限树木
-func (controller *CasbinController) Tree(ctx *gin.Context)  {
-	casbin_service.GetPerssionTree()
+func (controller *CasbinController) Tree(ctx *gin.Context) {
+	//1.获取权限树
+	tree := casbin_service.GetPermissionTree()
+
+	//2.响应数据
+	controller.ResponseJson(ctx, http.StatusOK, "", tree)
 }

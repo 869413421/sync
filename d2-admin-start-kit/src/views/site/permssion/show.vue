@@ -56,11 +56,12 @@
 import api from "@/api";
 import { mapState, mapActions } from "vuex";
 export default {
-  name: "user.show",
+  name: "permssion.show",
   data() {
     return {
       id: 0,
       edit: false,
+      permssionTree: [],
       requestMethods: [
         {
           value: "GET",
@@ -134,6 +135,7 @@ export default {
   },
   mounted() {
     this.id = this.$route.params.id;
+    this.getPermssionTree();
     if (this.id > 0) {
       this.edit = true;
       this.show();
@@ -164,6 +166,10 @@ export default {
     async show() {
       const res = await api.SYS_CASBIN_INFO(this.id);
       this.ruleForm = res;
+    },
+    async getPermssionTree() {
+      const res = await api.SYS_CASBIN_TREE();
+      this.permssionTree = res;
     },
     async update() {
       const res = await api.SYS_CASBIN_UPDATE(this.id, this.ruleForm);

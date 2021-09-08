@@ -59,7 +59,7 @@
 <script>
 import api from "@/api";
 export default {
-  name: "perssion",
+  name: "permssion",
   data() {
     return {
       tableData: [],
@@ -79,10 +79,10 @@ export default {
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push({ name: "perssion.show", params: { id: row.id } });
+      this.$router.push({ name: "permssion.show", params: { id: row.id } });
     },
     showEdit() {
-      this.$router.push({ name: "perssion.show", params: { id: 0 } });
+      this.$router.push({ name: "permssion.show", params: { id: 0 } });
     },
   },
 };

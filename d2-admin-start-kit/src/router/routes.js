@@ -1,6 +1,6 @@
 import layoutHeaderAside from '@/layout/header-aside'
 import userShow from '@/views/site/user/show.vue'
-import perssionShow from '@/views/site/perssion/show.vue'
+import perssionShow from '@/views/site/permssion/show.vue'
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
@@ -61,17 +61,17 @@ const frameIn = [
         component: _import('site/role')
       },
       {
-        path: 'perssion',
-        name: 'perssion',
+        path: 'permssion',
+        name: 'permssion',
         meta: {
           title: '权限管理',
           auth: true
         },
-        component: _import('site/perssion')
+        component: _import('site/permssion')
       },
       {
-        path: 'perssion/:id',
-        name: 'perssion.show',
+        path: 'permssion/:id',
+        name: 'permssion.show',
         meta: {
           title: '权限编辑',
           auth: true

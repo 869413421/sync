@@ -46,4 +46,16 @@ export default ({ request }) => ({
       data: data
     })
   }
+  ,
+  /**
+  * @description 新增用户
+  * @param {Object} data 用户信息
+  */
+  SYS_CASBIN_TREE() {
+    // 接口请求
+    return request({
+      url: '/casbin/tree',
+      method: 'get',
+    })
+  }
 })
