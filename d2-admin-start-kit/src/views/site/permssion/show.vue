@@ -67,6 +67,18 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "permssion.show",
   data() {
+    // 邮箱
+    var checkParentId = (rule, value, callback) => {
+      setTimeout(() => {
+        let parent_id = value[value.length-1];
+        if (this.ruleForm.id > 0 && this.ruleForm.id == parent_id) {
+          callback(new Error("不允许选中自己为父级菜单"));
+        } else {
+          this.ruleForm.parent_id=parent_id
+          callback();
+        }
+      }, 100);
+    };
     return {
       id: 0,
       edit: false,
@@ -103,7 +115,7 @@ export default {
         name: "",
         desc: "",
         ptype: "p",
-        parent_id:0,
+        parent_id: [0],
       },
       rules: {
         name: [
@@ -134,6 +146,7 @@ export default {
             trigger: "blur",
           },
         ],
+        parent_id: [{ validator: checkParentId, trigger: "blur" }],
       },
     };
   },
@@ -176,6 +189,7 @@ export default {
     async show() {
       const res = await api.SYS_CASBIN_INFO(this.id);
       this.ruleForm = res;
+      this.ruleForm.parent_id=[res.parent_id]
     },
     async getPermssionTree() {
       const res = await api.SYS_CASBIN_TREE();
@@ -184,6 +198,7 @@ export default {
     async update() {
       const res = await api.SYS_CASBIN_UPDATE(this.id, this.ruleForm);
       this.ruleForm = res;
+      this.ruleForm.parent_id=[this.ruleForm.parent_id]
       this.$notify({
         title: "成功",
         message: "更新成功",

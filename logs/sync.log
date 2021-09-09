@@ -1,8 +1,2 @@
-ERROR 2021/08/09 10:12:24 logger.go:49: 启动canal同步失败： ERROR 1236 (HY000): Client requested master to start replication from position > file size
-ERROR 2021/08/18 21:50:45 logger.go:49: connectEs error: Head "http://47.94.155.227:9200": context deadline exceeded
-ERROR 2021/09/05 22:37:36 logger.go:49: grouping policy elements do not meet role definition 加载策略失败
-ERROR 2021/09/06 22:31:29 logger.go:49: Error 1062: Duplicate entry 'p--request-GET---' for key 'casbin_rule.idx_casbin_rule' model rule create error
-ERROR 2021/09/06 22:31:32 logger.go:49: Error 1062: Duplicate entry 'p--request-GET---' for key 'casbin_rule.idx_casbin_rule' model rule create error
-ERROR 2021/09/06 22:33:39 logger.go:49: Error 1062: Duplicate entry 'p--request-GET---' for key 'casbin_rule.idx_casbin_rule' model rule create error
-ERROR 2021/09/06 22:46:46 logger.go:49: Error 1062: Duplicate entry 'p--request222-GET---' for key 'casbin_rule.idx_casbin_rule' model rule create error
-ERROR 2021/09/08 22:40:42 logger.go:49: invalid connection 加载策略失败
+ERROR 2021/09/09 11:45:38 logger.go:49: runtime error: invalid memory address or nil pointer dereference init Enforcer
+ERROR 2021/09/09 17:26:10 logger.go:49: Error 1205: Lock wait timeout exceeded; try restarting transaction model rule delete error

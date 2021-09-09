@@ -80,3 +80,5 @@ func (rule *CasbinRule) Delete() (rowsAffected int64, err error) {
 }
 
 
+
+

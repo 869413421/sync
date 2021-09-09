@@ -2,7 +2,6 @@ package types
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"sync/pkg/logger"
 )
@@ -46,7 +45,6 @@ func JsonToMap(jsonStr string) map[string]interface{} {
 	jsonMap := make(map[string]interface{})
 
 	err := json.Unmarshal([]byte(jsonStr), &jsonMap)
-	fmt.Println(err)
 	if err != nil {
 		return nil
 	}

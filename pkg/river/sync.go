@@ -122,7 +122,6 @@ func (r *River) syncLoop() {
 
 		select {
 		case v := <-r.syncCh:
-			fmt.Println(v)
 			switch v := v.(type) {
 			case posSaver:
 				now := time.Now()

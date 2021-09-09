@@ -1,7 +1,6 @@
 package middlewares
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"sync/pkg/enforcer"
@@ -34,14 +33,7 @@ func Enforcer() gin.HandlerFunc {
 			}
 		}
 
-		//5.判断是否在策略中存在
-		err := e.LoadPolicy()
-		if err != nil {
-			logger.Danger(err, "加载策略失败")
-			base.ResponseJson(ctx, http.StatusForbidden, "加载策略失败", []string{})
-			return
-		}
-		fmt.Println(e.GetAllRoles())
+		//5.校验权限
 		if ok, _ := e.Enforce(sub, obj, act); ok {
 			//4，1 放行
 			ctx.Next()

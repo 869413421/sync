@@ -1,7 +1,6 @@
 package tests
 
 import (
-	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"sync/bootstarp"
@@ -98,5 +97,4 @@ func TestDeleteUser(t *testing.T) {
 	assert.NoError(t, err, "Error Not Nil")
 	data := responseData.Data
 	assert.NotNil(t, data, "Response Data Nil")
-	fmt.Println(data)
 }

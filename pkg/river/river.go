@@ -108,7 +108,6 @@ func (r *River) NewCanal() error {
 	//3.从数据库中加载规则
 	var err error
 	for _, rule := range r.syncRules {
-		fmt.Println(rule.GetMapping())
 		canalConfig.IncludeTableRegex = append(canalConfig.IncludeTableRegex, fmt.Sprintf("%s.%s", rule.Schema, rule.Table))
 	}
 

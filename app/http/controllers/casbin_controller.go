@@ -2,7 +2,6 @@ package controllers
 
 import "C"
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -146,7 +145,6 @@ func (controller *CasbinController) Delete(ctx *gin.Context) {
 func (controller *CasbinController) Tree(ctx *gin.Context) {
 	//1.获取权限树
 	tree := casbin_service.GetPermissionTree()
-	fmt.Println(tree)
 
 	//2.响应数据
 	controller.ResponseJson(ctx, http.StatusOK, "", tree)

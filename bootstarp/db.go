@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"sync/config"
+	"sync/pkg/enforcer"
 	"sync/pkg/model"
 	"sync/pkg/model/sync_rule"
 	"sync/pkg/model/user"
@@ -27,6 +28,9 @@ func SetupDB() {
 
 	//5.执行数据迁移
 	migration(db)
+
+	//6.初始化enforcer链接
+	enforcer.CreateEnforcer()
 }
 
 // migration 数据迁移
@@ -37,6 +41,7 @@ func migration(db *gorm.DB) {
 
 	database := config.LoadConfig().Db.Database
 	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT '' AFTER `v5`;", database))
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;",database))
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_id` INT(11) NOT NULL DEFAULT 0 AFTER `desc`;",database))
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;", database))
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_id` INT(11) NOT NULL DEFAULT 0 AFTER `desc`;", database))
+	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_ids` VARCHAR(500) NOT NULL DEFAULT '' AFTER `parent_id`;", database))
 }

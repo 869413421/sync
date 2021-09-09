@@ -18,7 +18,7 @@
             <span style="margin-left: 10px">{{ scope.row.v_2 }}</span>
           </template>
         </el-table-column>
-            <el-table-column label="路由名称">
+        <el-table-column label="路由名称">
           <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.name }}</span>
           </template>
@@ -80,6 +80,19 @@ export default {
     },
     handleEdit(index, row) {
       this.$router.push({ name: "permssion.show", params: { id: row.id } });
+    },
+    async handleDelete(index, row) {
+      await api.SYS_CASBIN_DELETE(row.id);
+      this.$notify({
+        title: "成功",
+        message: "删除成功",
+        type: "success",
+        duration: 2000,
+      });
+      setTimeout(() => {
+         this.$router.go(0);
+      }, 2000);
+     
     },
     showEdit() {
       this.$router.push({ name: "permssion.show", params: { id: 0 } });

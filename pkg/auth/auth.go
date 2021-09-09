@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"sync/pkg/jwt"
 	"sync/pkg/logger"
@@ -12,11 +11,11 @@ import (
 func Attempt(name string, password string) (data map[string]interface{}, errors message.ResponseErrors) {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println(err)
+			logger.Danger(err, "auth Attempt error")
 		}
 	}()
 
-	//1.根据邮箱获取用户信息
+	//1.根据名称获取用户信息
 	user, err := user.GetByName(name)
 	errors = make(message.ResponseErrors)
 	//2.判断用户信息是否出错
