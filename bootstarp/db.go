@@ -1,11 +1,12 @@
 package bootstarp
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"sync/config"
 	"sync/pkg/enforcer"
 	"sync/pkg/model"
+	"sync/pkg/model/permssion"
+	"sync/pkg/model/role"
 	"sync/pkg/model/sync_rule"
 	"sync/pkg/model/user"
 )
@@ -37,11 +38,5 @@ func SetupDB() {
 func migration(db *gorm.DB) {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.Set("gorm:table_options", "Charset=utf8")
-	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{})
-
-	database := config.LoadConfig().Db.Database
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `name` VARCHAR(255) NOT NULL DEFAULT '' AFTER `v5`;", database))
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `desc` VARCHAR(255) NOT NULL DEFAULT '' AFTER `name`;", database))
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_id` INT(11) NOT NULL DEFAULT 0 AFTER `desc`;", database))
-	db.Exec(fmt.Sprintf("ALTER TABLE `%s`.`casbin_rule` ADD COLUMN `parent_ids` VARCHAR(500) NOT NULL DEFAULT '' AFTER `parent_id`;", database))
+	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{}, &role.Role{}, &permssion.Permssion{})
 }

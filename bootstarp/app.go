@@ -9,7 +9,6 @@ import (
 	"os"
 	"os/signal"
 	. "sync/config"
-	"sync/pkg/river"
 	"sync/pkg/route"
 	"time"
 )
@@ -30,10 +29,7 @@ func Run() {
 	//3.初始化数据库
 	SetupDB()
 
-	go func() {
-		r, _ := river.NewRiver()
-		r.Run()
-	}()
+
 
 	//4.如果是测试，不启动监听
 	if config.App.RunTest {
@@ -53,6 +49,11 @@ func Run() {
 			fmt.Println("Start Service Error ", err)
 		}
 	}()
+
+	//go func() {
+	//	r, _ := river.NewRiver()
+	//	r.Run()
+	//}()
 
 	//6.阻塞信号，平滑关闭
 	quit := make(chan os.Signal)
