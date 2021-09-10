@@ -10,12 +10,12 @@
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column label="路由">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.v_1 }}</span>
+            <span style="margin-left: 10px">{{ scope.row.url }}</span>
           </template>
         </el-table-column>
         <el-table-column label="请求方式">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.v_2 }}</span>
+            <span style="margin-left: 10px">{{ scope.row.method }}</span>
           </template>
         </el-table-column>
         <el-table-column label="路由名称">
@@ -59,7 +59,7 @@
 <script>
 import api from "@/api";
 export default {
-  name: "permssion",
+  name: "permission",
   data() {
     return {
       tableData: [],
@@ -72,17 +72,17 @@ export default {
   },
   methods: {
     async getList(page) {
-      const res = await api.SYS_CASBIN_LIST(page, "p");
+      const res = await api.SYS_PERMISSION_LIST(page);
       console.log(res);
-      this.tableData = res.rules;
+      this.tableData = res.permissions;
       this.currentPage = res.PagerData.Current.Number;
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push({ name: "permssion.show", params: { id: row.id } });
+      this.$router.push({ name: "permission.show", params: { id: row.id } });
     },
     async handleDelete(index, row) {
-      await api.SYS_CASBIN_DELETE(row.id);
+      await api.SYS_PERMISSION_DELETE(row.id);
       this.$notify({
         title: "成功",
         message: "删除成功",
@@ -95,7 +95,7 @@ export default {
      
     },
     showEdit() {
-      this.$router.push({ name: "permssion.show", params: { id: 0 } });
+      this.$router.push({ name: "permission.show", params: { id: 0 } });
     },
   },
 };

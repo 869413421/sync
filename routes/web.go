@@ -10,6 +10,7 @@ var userController = NewUserController()
 var authController = NewAuthController()
 var imageController = NewImageController()
 var casbinController = NewCasbinController()
+var permissionController = NewPermissionController()
 
 var middlewareHandlers []gin.HandlerFunc
 
@@ -44,5 +45,16 @@ func RegisterWebRoutes(router *gin.Engine) {
 		casbinApi.POST("", casbinController.Store)
 		casbinApi.PUT("/:id", casbinController.Update)
 		casbinApi.DELETE("/:id", casbinController.Delete)
+	}
+
+	// permission管理路由
+	permissionApi := router.Group("/permission").Use(middlewareHandlers...)
+	{
+		permissionApi.GET("", permissionController.Index)
+		permissionApi.GET("/:id", permissionController.Show)
+		permissionApi.GET("/tree", permissionController.Tree)
+		permissionApi.POST("", permissionController.Store)
+		permissionApi.PUT("/:id", permissionController.Update)
+		permissionApi.DELETE("/:id", permissionController.Delete)
 	}
 }

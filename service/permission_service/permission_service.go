@@ -1,0 +1,44 @@
+package permission_service
+
+import (
+	. "sync/pkg/model/permission"
+)
+
+// GetPermissionTree 获取权限树
+func GetPermissionTree() []interface{} {
+	//1.获取权限列表
+	where := make(map[string]interface{})
+	rules := GetList(where)
+
+	//2.构建权限树
+	item := make(map[string]interface{})
+	item["value"] = 0
+	item["label"] = "一级菜单"
+	item["children"] = nil
+	data := []interface{}{item}
+	tree := getTreeByList(0, rules)
+	data = append(data, tree...)
+
+	//3.返回数据
+	return data
+}
+
+// getTreeByList 根据list构建权限树
+func getTreeByList(parentId uint64, rules []Permission) []interface{} {
+	//1.创建一个切片
+	var data []interface{}
+
+	//2.递归构建新数据
+	for _, rule := range rules {
+		if rule.ParentId == parentId {
+			item := make(map[string]interface{})
+			item["value"] = rule.ID
+			item["label"] = rule.Name
+			item["children"] = getTreeByList(rule.ID, rules)
+			data = append(data, item)
+		}
+	}
+
+	//3.返回数据
+	return data
+}

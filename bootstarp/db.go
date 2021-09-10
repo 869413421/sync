@@ -5,7 +5,7 @@ import (
 	"sync/config"
 	"sync/pkg/enforcer"
 	"sync/pkg/model"
-	"sync/pkg/model/permssion"
+	"sync/pkg/model/permission"
 	"sync/pkg/model/role"
 	"sync/pkg/model/sync_rule"
 	"sync/pkg/model/user"
@@ -38,5 +38,5 @@ func SetupDB() {
 func migration(db *gorm.DB) {
 	db.Set("gorm:table_options", "ENGINE=InnoDB")
 	db.Set("gorm:table_options", "Charset=utf8")
-	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{}, &role.Role{}, &permssion.Permssion{})
+	db.AutoMigrate(&user.User{}, &sync_rule.SyncRule{}, &role.Role{},&permission.Permission{})
 }

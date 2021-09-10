@@ -11,20 +11,8 @@
         size="small"
         style="width: 50%; margin: auto"
       >
-        <el-form-item label="路由" prop="v_1">
-          <el-input v-model="ruleForm.v_1" placeholder="请输入路由"></el-input>
-        </el-form-item>
-
-        <el-form-item label="请求方式" prop="v_2">
-          <el-select v-model="ruleForm.v_2" placeholder="请选择">
-            <el-option
-              v-for="item in requestMethods"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            >
-            </el-option>
-          </el-select>
+        <el-form-item label="路由" prop="url">
+          <el-input v-model="ruleForm.url" placeholder="请输入路由"></el-input>
         </el-form-item>
 
         <el-form-item label="路由名称" prop="name">
@@ -41,13 +29,35 @@
           ></el-input>
         </el-form-item>
 
+        <el-form-item label="请求方式" prop="method">
+          <el-select v-model="ruleForm.method" placeholder="请选择">
+            <el-option
+              v-for="item in requestMethods"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+
         <el-form-item label="父级路由" prop="parent_id">
           <el-cascader
             v-model="ruleForm.parent_id"
             :options="permssionTree"
+            :show-all-levels="true"
             :props="{ checkStrictly: true }"
             clearable
           ></el-cascader>
+        </el-form-item>
+
+        <el-form-item label="排序" prop="order">
+          <el-input-number
+            v-model="ruleForm.order"
+            :min="0"
+            :max="10000"
+            label="请选择排序  "
+          ></el-input-number>
         </el-form-item>
 
         <el-form-item>
@@ -65,16 +75,16 @@
 import api from "@/api";
 import { mapState, mapActions } from "vuex";
 export default {
-  name: "permssion.show",
+  name: "permission.show",
   data() {
     // 邮箱
     var checkParentId = (rule, value, callback) => {
       setTimeout(() => {
-        let parent_id = value[value.length-1];
+        let parent_id = value[value.length - 1];
         if (this.ruleForm.id > 0 && this.ruleForm.id == parent_id) {
           callback(new Error("不允许选中自己为父级菜单"));
         } else {
-          this.ruleForm.parent_id=parent_id
+          this.ruleForm.parent_id = parent_id;
           callback();
         }
       }, 100);
@@ -110,11 +120,11 @@ export default {
         },
       ],
       ruleForm: {
-        v_1: "",
-        v_2: "",
+        url: "",
         name: "",
+        method: "",
         desc: "",
-        ptype: "p",
+        order: 0,
         parent_id: [0],
       },
       rules: {
@@ -136,8 +146,10 @@ export default {
             trigger: "blur",
           },
         ],
-        v_2: [{ required: true, message: "请选择请求尝试", trigger: "change" }],
-        v_1: [
+        method: [
+          { required: true, message: "请选择请求方式", trigger: "change" },
+        ],
+        url: [
           { required: true, message: "请输入路由", trigger: "blur" },
           {
             min: 2,
@@ -187,18 +199,22 @@ export default {
       this.$refs[formName].resetFields();
     },
     async show() {
-      const res = await api.SYS_CASBIN_INFO(this.id);
+      const res = await api.SYS_PERMISSION_INFO(this.id);
       this.ruleForm = res;
-      this.ruleForm.parent_id=[res.parent_id]
+      if (res.parent_id == "") {
+        this.ruleForm.parent_id = [res.parent_id];
+      } else {
+        this.ruleForm.parent_id = res.parent_ids.split(',')+","+this.ruleForm.id
+      }
     },
     async getPermssionTree() {
-      const res = await api.SYS_CASBIN_TREE();
+      const res = await api.SYS_PERMISSION_TREE();
       this.permssionTree = res;
     },
     async update() {
-      const res = await api.SYS_CASBIN_UPDATE(this.id, this.ruleForm);
+      const res = await api.SYS_PERMISSION_UPDATE(this.id, this.ruleForm);
       this.ruleForm = res;
-      this.ruleForm.parent_id=[this.ruleForm.parent_id]
+      this.ruleForm.parent_id = [this.ruleForm.parent_id];
       this.$notify({
         title: "成功",
         message: "更新成功",
@@ -207,7 +223,7 @@ export default {
       });
     },
     async store() {
-      const res = await api.SYS_CASBIN_STORE(this.ruleForm);
+      const res = await api.SYS_PERMISSION_STORE(this.ruleForm);
       this.$notify({
         title: "成功",
         message: "新增成功",
@@ -216,7 +232,6 @@ export default {
       });
       setTimeout(() => {
         let tagName = this.current;
-        console.log(tagName);
         this.close({ tagName });
       }, 2000);
     },

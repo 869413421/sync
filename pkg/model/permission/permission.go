@@ -1,8 +1,8 @@
-package permssion
+package permission
 
 import "sync/pkg/model"
 
-type Permssion struct {
+type Permission struct {
 	model.BaseModel
 	Url      string `gorm:"column:url;type:varchar(255);not null;default:'';uniqueIndex:uniq_name,priority:1" valid:"url" json:"url"`
 	Name     string `gorm:"column:name;type:varchar(50);not null;uniqueIndex:uniq_name,priority:2" valid:"name" json:"name"`
