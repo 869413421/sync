@@ -10,5 +10,5 @@ type Permission struct {
 	Desc     string `gorm:"column:desc;type:varchar(255);not null;default:''" valid:"desc" json:"desc"`
 	Order    int    `gorm:"column:order;type:int(11);not null;default:0" valid:"order" json:"order"`
 	ParentId uint64 `gorm:"column:parent_id;type:int(11);not null;default:0" valid:"parent_id" json:"parent_id"`
-	ParentIds string `gorm:"column:parent_ids;type:varchar(500);not null;default:''" valid:"parent_ids" json:"parent_ids"`
+	ParentIds string `gorm:"column:parent_ids;type:varchar(500);not null;default:'';Index:idx_parent_ids" valid:"parent_ids" json:"parent_ids"`
 }

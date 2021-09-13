@@ -80,6 +80,7 @@ export default {
     // 邮箱
     var checkParentId = (rule, value, callback) => {
       setTimeout(() => {
+        console.log(value);
         let parent_id = value[value.length - 1];
         if (this.ruleForm.id > 0 && this.ruleForm.id == parent_id) {
           callback(new Error("不允许选中自己为父级菜单"));
@@ -204,7 +205,13 @@ export default {
       if (res.parent_id == "") {
         this.ruleForm.parent_id = [res.parent_id];
       } else {
-        this.ruleForm.parent_id = res.parent_ids.split(',')+","+this.ruleForm.id
+        this.ruleForm.parent_id = res.parent_ids
+          .split(",")
+          .map(function (data) {
+            return +data;
+          });
+
+        console.log(res.parent_ids.split(","));
       }
     },
     async getPermssionTree() {

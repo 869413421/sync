@@ -60,17 +60,17 @@ func (permission *Permission) Store() (err error) {
 	result := model.DB.Model(&Permission{}).Create(&permission)
 	err = result.Error
 	if err != nil {
-		logger.Danger(err, "model rule create error")
+		logger.Danger(err, "model permission create error")
 	}
 	return
 }
 
 // Update 更新
 func (permission *Permission) Update() (rowsAffected int64, err error) {
-	result := model.DB.Model(&Permission{}).Save(&permission)
+	result := model.DB.Model(&Permission{}).Where("id = ?",permission.ID).Save(&permission)
 	err = result.Error
 	if err != nil {
-		logger.Danger(err, "model rule update error")
+		logger.Danger(err, "model permission update error")
 		return
 	}
 	rowsAffected = result.RowsAffected
@@ -82,7 +82,7 @@ func (permission *Permission) Delete() (rowsAffected int64, err error) {
 	result := model.DB.Model(&Permission{}).Delete(&permission)
 	err = result.Error
 	if err != nil {
-		logger.Danger(err, "model rule delete error")
+		logger.Danger(err, "model permission delete error")
 		return
 	}
 	rowsAffected = result.RowsAffected
