@@ -10,11 +10,6 @@
       <el-table :data="tableData" border style="width: 100%">
         <el-table-column label="角色">
           <template slot-scope="scope">
-            <span style="margin-left: 10px">{{ scope.row.v_0 }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="角色名称">
-          <template slot-scope="scope">
             <span style="margin-left: 10px">{{ scope.row.name }}</span>
           </template>
         </el-table-column>
@@ -67,17 +62,28 @@ export default {
   },
   methods: {
     async getList(page) {
-      const res = await api.SYS_CASBIN_LIST(page, "g");
-      console.log(res);
-      this.tableData = res.rules;
+      const res = await api.SYS_ROLE_LIST(page);
+      this.tableData = res.roles;
       this.currentPage = res.PagerData.Current.Number;
       this.total = res.PagerData.TotalCount;
     },
     handleEdit(index, row) {
-      this.$router.push({ name: "user.show", params: { id: row.id } });
+      this.$router.push({ name: "role.show", params: { id: row.id } });
     },
     showEdit() {
-      this.$router.push({ name: "user.show", params: { id: 0 } });
+      this.$router.push({ name: "role.show", params: { id: 0 } });
+    },
+    async handleDelete(index, row) {
+      await api.SYS_ROLE_DELETE(row.id);
+      this.$notify({
+        title: "成功",
+        message: "删除成功",
+        type: "success",
+        duration: 2000,
+      });
+      setTimeout(() => {
+        this.$router.go(0);
+      }, 2000);
     },
   },
 };

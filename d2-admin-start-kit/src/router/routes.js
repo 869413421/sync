@@ -1,6 +1,7 @@
 import layoutHeaderAside from '@/layout/header-aside'
 import userShow from '@/views/site/user/show.vue'
 import permissionShow from '@/views/site/permission/show.vue'
+import roleShow from '@/views/site/role/show.vue'
 
 // 由于懒加载页面太多的话会造成webpack热更新太慢，所以开发环境不使用懒加载，只有生产环境使用懒加载
 const _import = require('@/libs/util.import.' + process.env.NODE_ENV)
@@ -50,6 +51,15 @@ const frameIn = [
           auth: true
         },
         component: _import('site/role')
+      },
+      {
+        path: 'role/:id',
+        name: 'role.show',
+        meta: {
+          title: '角色编辑',
+          auth: true
+        },
+        component: roleShow
       },
       {
         path: 'role/:id',

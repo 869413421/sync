@@ -14,7 +14,7 @@ func Pagination(ctx *gin.Context, where map[string]interface{}, perPage int) (pe
 	for key, val := range where {
 		db.Where(key+"=?", val)
 	}
-	_pager := pagination.New(ctx, db, "/casbin", perPage)
+	_pager := pagination.New(ctx, db, "/permission", perPage)
 
 	// 2. 获取视图数据
 	viewData = _pager.Paging()

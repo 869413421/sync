@@ -2,26 +2,30 @@ package controllers
 
 import "C"
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
 	"sync/app/http/requests"
 	"sync/pkg/logger"
-	. "sync/pkg/model/permission"
+	. "sync/pkg/model/role"
 	"sync/pkg/types"
-	"sync/service/permission_service"
 )
 
-type PermissionController struct {
+type RoleController struct {
 	BaseController
 }
 
-func NewPermissionController() *PermissionController {
-	return &PermissionController{}
+type PermissionsJson struct {
+	Permissions interface{} `json:"permissions"`
+}
+
+func NewRoleController() *RoleController {
+	return &RoleController{}
 }
 
 // Index 获取列表
-func (controller *PermissionController) Index(ctx *gin.Context) {
+func (controller *RoleController) Index(ctx *gin.Context) {
 	//1.构建查询条件
 	where := make(map[string]interface{})
 
@@ -35,12 +39,12 @@ func (controller *PermissionController) Index(ctx *gin.Context) {
 	//3.响应数据
 	data := make(map[string]interface{})
 	data["PagerData"] = pagerData
-	data["permissions"] = rules
+	data["roles"] = rules
 	controller.ResponseJson(ctx, http.StatusOK, "", data)
 }
 
 // Show 规则详情
-func (controller *PermissionController) Show(ctx *gin.Context) {
+func (controller *RoleController) Show(ctx *gin.Context) {
 	//1.获取路由中参数
 	id := ctx.Param("id")
 	if id == "" {
@@ -52,84 +56,88 @@ func (controller *PermissionController) Show(ctx *gin.Context) {
 	rule, err := GetByID(types.StringToUInt64(id))
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			controller.ResponseJson(ctx, http.StatusForbidden, "permission not found", []string{})
+			controller.ResponseJson(ctx, http.StatusForbidden, "Role not found", []string{})
 			return
 		}
-		logger.Danger(err, "permission controller get permission err")
+		logger.Danger(err, "Role controller get Role err")
 	}
 	//3.返回规则信息
 	controller.ResponseJson(ctx, http.StatusOK, "", rule)
 }
 
 // Store 新增
-func (controller *PermissionController) Store(ctx *gin.Context) {
+func (controller *RoleController) Store(ctx *gin.Context) {
 	//1.获取请求参数
-	_permission := Permission{}
-	ctx.ShouldBind(&_permission)
+	_Role := Role{}
+	ctx.ShouldBind(&_Role)
 
 	//2.验证提交信息
-	errs := requests.ValidatePermission(_permission)
+	errs := requests.ValidateRole(_Role)
 	if len(errs) > 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
 	//3.规则
-	err := _permission.Store()
+	err := _Role.Store()
 	if err != nil {
 		controller.ResponseJson(ctx, http.StatusForbidden, "新建规则失败", err)
 		return
 	}
 
 	//4.更新成功，响应信息
-	controller.ResponseJson(ctx, http.StatusOK, "", _permission)
+	controller.ResponseJson(ctx, http.StatusOK, "", _Role)
 }
 
 // Update 更新
-func (controller *PermissionController) Update(ctx *gin.Context) {
+func (controller *RoleController) Update(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
+	permissions:=PermissionsJson{}
+	ctx.BindJSON(&permissions)
+	fmt.Println("接受权限")
+	fmt.Println(permissions)
 
 	//2.构建用户信息
-	_permission, err := GetByID(types.StringToUInt64(id))
+	_Role, err := GetByID(types.StringToUInt64(id))
 	if err == gorm.ErrRecordNotFound {
-		controller.ResponseJson(ctx, http.StatusForbidden, "permission not found", []string{})
+		controller.ResponseJson(ctx, http.StatusForbidden, "Role not found", []string{})
 		return
 	}
-	ctx.ShouldBind(&_permission)
+	ctx.ShouldBind(&_Role)
 
 	//3.验证提交信息
-	errs := requests.ValidatePermission(_permission)
+	errs := requests.ValidateRole(_Role)
 	if len(errs) > 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "validate error", errs)
 		return
 	}
 
 	//4.更新规则
-	rowsAffected, err := _permission.Update()
+	rowsAffected, err := _Role.Update()
 	if rowsAffected == 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "更新规则失败,没有任何更改", err)
 		return
 	}
 
 	//5.更新成功，响应信息
-	controller.ResponseJson(ctx, http.StatusOK, "", _permission)
+	controller.ResponseJson(ctx, http.StatusOK, "", _Role)
 }
 
 // Delete 删除规则
-func (controller *PermissionController) Delete(ctx *gin.Context) {
+func (controller *RoleController) Delete(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
 
 	//2.构建规则信息
-	_permission, err := GetByID(types.StringToUInt64(id))
+	_Role, err := GetByID(types.StringToUInt64(id))
 	if err == gorm.ErrRecordNotFound {
-		controller.ResponseJson(ctx, http.StatusForbidden, "permission not found", err)
+		controller.ResponseJson(ctx, http.StatusForbidden, "role not found", err)
 		return
 	}
 
 	//3.删除用户
-	rowsAffected, err := _permission.Delete()
+	rowsAffected, err := _Role.Delete()
 	if rowsAffected == 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "删除权限失败", err)
 		return
@@ -137,13 +145,4 @@ func (controller *PermissionController) Delete(ctx *gin.Context) {
 
 	//5.删除成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
-}
-
-// Tree 获取权限树木
-func (controller *PermissionController) Tree(ctx *gin.Context) {
-	//1.获取权限树
-	tree := permission_service.GetPermissionTree()
-
-	//2.响应数据
-	controller.ResponseJson(ctx, http.StatusOK, "", tree)
 }

@@ -44,7 +44,7 @@
         <el-form-item label="父级路由" prop="parent_id">
           <el-cascader
             v-model="ruleForm.parent_id"
-            :options="permssionTree"
+            :options="permissionTree"
             :show-all-levels="true"
             :props="{ checkStrictly: true }"
             clearable
@@ -77,7 +77,7 @@ import { mapState, mapActions } from "vuex";
 export default {
   name: "permission.show",
   data() {
-    // 邮箱
+    // 父级路由
     var checkParentId = (rule, value, callback) => {
       setTimeout(() => {
         console.log(value);
@@ -93,7 +93,7 @@ export default {
     return {
       id: 0,
       edit: false,
-      permssionTree: [],
+      permissionTree: [],
       requestMethods: [
         {
           value: "GET",
@@ -171,7 +171,7 @@ export default {
   },
   mounted() {
     this.id = this.$route.params.id;
-    this.getPermssionTree();
+    this.getPermissionTree();
     if (this.id > 0) {
       this.edit = true;
       this.show();
@@ -214,9 +214,9 @@ export default {
         console.log(res.parent_ids.split(","));
       }
     },
-    async getPermssionTree() {
+    async getPermissionTree() {
       const res = await api.SYS_PERMISSION_TREE();
-      this.permssionTree = res;
+      this.permissionTree = res;
     },
     async update() {
       const res = await api.SYS_PERMISSION_UPDATE(this.id, this.ruleForm);

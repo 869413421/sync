@@ -36,7 +36,6 @@ func ValidatePermission(data permission.Permission) map[string][]string {
 		"url": []string{
 			"required：URL类型为必填",
 			"between:URL在2到255个字符之间",
-			"not_exists：用户名已经存在",
 		},
 		"name": []string{
 			"required：名称为必填",
