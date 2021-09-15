@@ -16,6 +16,10 @@ func UInt64ToString(num uint64) string {
 	return strconv.FormatUint(num, 10)
 }
 
+func Float64ToString(num float64) string {
+	return strconv.FormatFloat(num,'f', -1, 64)
+}
+
 func StringToInt(str string) int {
 	num, err := strconv.Atoi(str)
 	if err != nil {

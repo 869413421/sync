@@ -37,7 +37,7 @@
         <el-form-item label="角色权限" prop="permissions">
           <el-cascader
             placeholder="试试搜索：指南"
-             v-model="ruleForm.permissions"
+            v-model="ruleForm.permissions"
             :options="permissionTree"
             :props="{ multiple: true, checkStrictly: true }"
             filterable
@@ -115,6 +115,13 @@ export default {
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.ruleForm.permissions = this.ruleForm.permissions.map(function (
+            value
+          ) {
+            return value[value.length - 1];
+          });
+
+          console.log(this.ruleForm.permissions)
           if (this.edit) {
             this.update();
           } else {

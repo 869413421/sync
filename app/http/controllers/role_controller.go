@@ -2,7 +2,6 @@ package controllers
 
 import "C"
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"sync/pkg/logger"
 	. "sync/pkg/model/role"
 	"sync/pkg/types"
+	"sync/service/role_service"
 )
 
 type RoleController struct {
@@ -17,7 +17,7 @@ type RoleController struct {
 }
 
 type PermissionsJson struct {
-	Permissions interface{} `json:"permissions"`
+	Permissions []interface{} `json:"permissions"`
 }
 
 func NewRoleController() *RoleController {
@@ -93,10 +93,8 @@ func (controller *RoleController) Store(ctx *gin.Context) {
 func (controller *RoleController) Update(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
-	permissions:=PermissionsJson{}
+	permissions := PermissionsJson{}
 	ctx.BindJSON(&permissions)
-	fmt.Println("接受权限")
-	fmt.Println(permissions)
 
 	//2.构建用户信息
 	_Role, err := GetByID(types.StringToUInt64(id))
@@ -119,6 +117,9 @@ func (controller *RoleController) Update(ctx *gin.Context) {
 		controller.ResponseJson(ctx, http.StatusForbidden, "更新规则失败,没有任何更改", err)
 		return
 	}
+
+	//5 更新权限
+	role_service.AddPermissions(_Role.ID, permissions.Permissions)
 
 	//5.更新成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", _Role)
