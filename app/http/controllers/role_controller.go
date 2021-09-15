@@ -119,7 +119,7 @@ func (controller *RoleController) Update(ctx *gin.Context) {
 	}
 
 	//5 更新权限
-	role_service.AddPermissions(_Role.ID, permissions.Permissions)
+	role_service.AddPermissionsByRole(_Role.ID, permissions.Permissions)
 
 	//5.更新成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", _Role)
