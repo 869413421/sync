@@ -70,6 +70,8 @@ func (controller *RoleController) Store(ctx *gin.Context) {
 	//1.获取请求参数
 	_Role := Role{}
 	ctx.ShouldBind(&_Role)
+	permissions := PermissionsJson{}
+	ctx.ShouldBind(&permissions)
 
 	//2.验证提交信息
 	errs := requests.ValidateRole(_Role)
@@ -81,7 +83,14 @@ func (controller *RoleController) Store(ctx *gin.Context) {
 	//3.规则
 	err := _Role.Store()
 	if err != nil {
-		controller.ResponseJson(ctx, http.StatusForbidden, "新建规则失败", err)
+		controller.ResponseJson(ctx, http.StatusForbidden, "新建角色失败", err)
+		return
+	}
+
+	//5 更新权限
+	err = role_service.AddPermissionsByRole(_Role.ID, permissions.Permissions)
+	if err != nil {
+		controller.ResponseJson(ctx, http.StatusForbidden, "创建权限失败", err)
 		return
 	}
 
@@ -119,7 +128,11 @@ func (controller *RoleController) Update(ctx *gin.Context) {
 	}
 
 	//5 更新权限
-	role_service.AddPermissionsByRole(_Role.ID, permissions.Permissions)
+	err = role_service.AddPermissionsByRole(_Role.ID, permissions.Permissions)
+	if err != nil {
+		controller.ResponseJson(ctx, http.StatusForbidden, "更新权限失败", err)
+		return
+	}
 
 	//5.更新成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", _Role)
@@ -148,6 +161,7 @@ func (controller *RoleController) Delete(ctx *gin.Context) {
 	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
 }
 
+// Permissions 获取角色权限
 func (controller *RoleController) Permissions(ctx *gin.Context) {
 	//1.获取请求参数
 	id := ctx.Param("id")
@@ -159,8 +173,12 @@ func (controller *RoleController) Permissions(ctx *gin.Context) {
 		return
 	}
 
-	role_service.GetAllPermission(_Role.ID)
+	permission, err := role_service.GetAllPermission(_Role.ID)
+	if err != nil {
+		controller.ResponseJson(ctx, http.StatusForbidden, "获取角色权限失败", err)
+		return
+	}
 
-	//5.删除成功，响应信息
-	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
+	//5.成功，响应信息
+	controller.ResponseJson(ctx, http.StatusOK, "", permission)
 }

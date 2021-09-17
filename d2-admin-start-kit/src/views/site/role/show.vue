@@ -18,20 +18,11 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="路由简介" prop="desc">
+        <el-form-item label="角色简介" prop="desc">
           <el-input
             v-model="ruleForm.desc"
-            placeholder="请输入路由简介"
+            placeholder="请输入角色简介"
           ></el-input>
-        </el-form-item>
-
-        <el-form-item label="排序" prop="order">
-          <el-input-number
-            v-model="ruleForm.order"
-            :min="0"
-            :max="10000"
-            label="请选择排序  "
-          ></el-input-number>
         </el-form-item>
 
         <el-form-item label="角色权限" prop="permissions">
@@ -42,6 +33,15 @@
             :props="{ multiple: true, checkStrictly: true }"
             filterable
           ></el-cascader>
+        </el-form-item>
+
+        <el-form-item label="排序" prop="order">
+          <el-input-number
+            v-model="ruleForm.order"
+            :min="0"
+            :max="10000"
+            label="请选择排序  "
+          ></el-input-number>
         </el-form-item>
 
         <el-form-item>
@@ -90,6 +90,9 @@ export default {
             trigger: "blur",
           },
         ],
+        permissions: [
+          { required: true, message: "请选择权限", trigger: "blur" },
+        ],
       },
     };
   },
@@ -105,6 +108,7 @@ export default {
     if (this.id > 0) {
       this.edit = true;
       this.show();
+      this.getRolePermission();
     }
   },
   methods: {
@@ -120,8 +124,6 @@ export default {
           ) {
             return value[value.length - 1];
           });
-
-          console.log(this.ruleForm.permissions)
           if (this.edit) {
             this.update();
           } else {
@@ -154,6 +156,9 @@ export default {
         type: "success",
         duration: 2000,
       });
+      setTimeout(() => {
+        this.$router.go(0);
+      }, 2000);
     },
     async store() {
       await api.SYS_ROLE_STORE(this.ruleForm);
@@ -167,6 +172,20 @@ export default {
         let tagName = this.current;
         this.close({ tagName });
       }, 2000);
+    },
+    async getRolePermission() {
+      const res = await api.SYS_ROLE_PERMISSIONS(this.id);
+      this.ruleForm.permissions = res.map(function (item) {
+        if (item.parent_ids) {
+          let ids = item.parent_ids.split(",");
+          ids.push(item.id);
+          return ids;
+        } else {
+          return [item.id];
+        }
+      });
+
+      console.log(this.ruleForm);
     },
   },
 };

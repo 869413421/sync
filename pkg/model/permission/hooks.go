@@ -37,6 +37,7 @@ func (permission *Permission) AfterDelete(tx *gorm.DB) (err error) {
 		SkipHooks:true,
 	})
 	skipHookDB.Where("parent_ids LIKE ?",types.UInt64ToString(permission.ID)+"%").Delete(Permission{})
+
 	//2.删除所有拥有该权限数据
 
 	return

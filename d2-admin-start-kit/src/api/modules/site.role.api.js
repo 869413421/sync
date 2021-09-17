@@ -56,5 +56,16 @@ export default ({ request }) => ({
       url: '/role/' + id,
       method: 'delete'
     })
-  }
+  },
+    /**
+   * @description 角色权限
+   * @param {BigInteger} id ID
+   */
+     SYS_ROLE_PERMISSIONS(id) {
+      // 接口请求
+      return request({
+        url: '/role/' + id+"/permissions",
+        method: 'get'
+      })
+    }
 })

@@ -1,7 +1,6 @@
 package role_service
 
 import (
-	"fmt"
 	"sync/pkg/enforcer"
 	"sync/pkg/logger"
 	"sync/pkg/model"
@@ -40,12 +39,8 @@ func AddPermissionsByRole(roleId uint64, ids []interface{}) (err error) {
 	return nil
 }
 
+// GetAllPermission 获取角色所有权限
 func GetAllPermission(roleId uint64) (permissionList []permission.Permission, err error) {
-	e := enforcer.Enforcer
-	rolePermission := e.GetPermissionsForUser(types.UInt64ToString(roleId))
-
-	err = model.DB.Model(P)Where("(url,method) in", rolePermission).Joins("join permissions on ").Find(&permissionList).Error
-	fmt.Println(permissionList)
-	fmt.Println(err)
+	err = model.DB.Model(&permission.Permission{}).Joins("JOIN casbin_rule ON url=v1 AND method=V2").Where("v0 = ?",types.UInt64ToString(roleId)).Find(&permissionList).Error
 	return
 }
