@@ -147,3 +147,20 @@ func (controller *RoleController) Delete(ctx *gin.Context) {
 	//5.删除成功，响应信息
 	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
 }
+
+func (controller *RoleController) Permissions(ctx *gin.Context) {
+	//1.获取请求参数
+	id := ctx.Param("id")
+
+	//2.获取角色
+	_Role, err := GetByID(types.StringToUInt64(id))
+	if err == gorm.ErrRecordNotFound {
+		controller.ResponseJson(ctx, http.StatusForbidden, "role not found", err)
+		return
+	}
+
+	role_service.GetAllPermission(_Role.ID)
+
+	//5.删除成功，响应信息
+	controller.ResponseJson(ctx, http.StatusOK, "", []string{})
+}

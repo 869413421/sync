@@ -67,5 +67,6 @@ func RegisterWebRoutes(router *gin.Engine) {
 		roleApi.POST("", roleController.Store)
 		roleApi.PUT("/:id", roleController.Update)
 		roleApi.DELETE("/:id", roleController.Delete)
+		roleApi.GET("/:id/permissions", roleController.Permissions)
 	}
 }

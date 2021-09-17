@@ -1,6 +1,7 @@
 package role_service
 
 import (
+	"fmt"
 	"sync/pkg/enforcer"
 	"sync/pkg/logger"
 	"sync/pkg/model"
@@ -22,14 +23,14 @@ func AddPermissionsByRole(roleId uint64, ids []interface{}) (err error) {
 	//2.查找所有需添加权限
 	var permissionIds []uint64
 	for _, permissionId := range ids {
-		permissionIds=append(permissionIds,uint64(permissionId.(float64)))
+		permissionIds = append(permissionIds, uint64(permissionId.(float64)))
 	}
 	var permissionList []permission.Permission
-	model.DB.Find(&permissionList,permissionIds)
+	model.DB.Find(&permissionList, permissionIds)
 
 	//3.添加权限
-	for _,val :=range permissionList{
-		_, err = e.AddPermissionForUser(id, val.Url,val.Method)
+	for _, val := range permissionList {
+		_, err = e.AddPermissionForUser(id, val.Url, val.Method)
 		if err != nil {
 			logger.Danger(err, "AddPermissions AddPermissionForUser Error")
 			return
@@ -37,4 +38,14 @@ func AddPermissionsByRole(roleId uint64, ids []interface{}) (err error) {
 	}
 
 	return nil
+}
+
+func GetAllPermission(roleId uint64) (permissionList []permission.Permission, err error) {
+	e := enforcer.Enforcer
+	rolePermission := e.GetPermissionsForUser(types.UInt64ToString(roleId))
+
+	err = model.DB.Model(P)Where("(url,method) in", rolePermission).Joins("join permissions on ").Find(&permissionList).Error
+	fmt.Println(permissionList)
+	fmt.Println(err)
+	return
 }
