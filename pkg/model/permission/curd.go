@@ -67,7 +67,7 @@ func (permission *Permission) Store() (err error) {
 
 // Update 更新
 func (permission *Permission) Update() (rowsAffected int64, err error) {
-	result := model.DB.Model(&Permission{}).Where("id = ?",permission.ID).Save(&permission)
+	result := model.DB.Save(&permission)
 	err = result.Error
 	if err != nil {
 		logger.Danger(err, "model permission update error")
@@ -88,3 +88,4 @@ func (permission *Permission) Delete() (rowsAffected int64, err error) {
 	rowsAffected = result.RowsAffected
 	return
 }
+

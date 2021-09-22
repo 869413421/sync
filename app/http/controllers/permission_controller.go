@@ -2,6 +2,7 @@ package controllers
 
 import "C"
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"net/http"
@@ -107,6 +108,7 @@ func (controller *PermissionController) Update(ctx *gin.Context) {
 
 	//4.更新规则
 	rowsAffected, err := _permission.Update()
+	fmt.Println(_permission)
 	if rowsAffected == 0 {
 		controller.ResponseJson(ctx, http.StatusForbidden, "更新规则失败,没有任何更改", err)
 		return

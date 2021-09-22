@@ -1,12 +1,3 @@
-ERROR 2021/09/09 11:45:38 logger.go:49: runtime error: invalid memory address or nil pointer dereference init Enforcer
-ERROR 2021/09/09 17:26:10 logger.go:49: Error 1205: Lock wait timeout exceeded; try restarting transaction model rule delete error
-ERROR 2021/09/09 22:24:26 logger.go:49: 启动canal同步失败： table is not exist
-ERROR 2021/09/13 21:12:37 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:13:01 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:17:11 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:19:36 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:20:01 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:20:12 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:20:28 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:21:07 logger.go:49: WHERE conditions required model rule update error
-ERROR 2021/09/13 21:22:13 logger.go:49: WHERE conditions required model rule update error
+ERROR 2021/09/22 22:24:17 logger.go:49: Error 1205: Lock wait timeout exceeded; try restarting transaction model permission update error
+ERROR 2021/09/22 22:37:40 logger.go:49: WHERE conditions required model permission update error
+ERROR 2021/09/22 22:37:51 logger.go:49: WHERE conditions required model permission update error
