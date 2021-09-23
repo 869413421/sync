@@ -5,6 +5,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"sync/app/http/requests"
+	"sync/pkg/enforcer"
 	"sync/pkg/logger"
 	"sync/pkg/model/user"
 	"sync/pkg/types"
@@ -13,14 +14,6 @@ import (
 type UserController struct {
 	BaseController
 }
-
-//type RequestJson struct {
-//	Name     string `json:"Name"`
-//	Avatar   string `json:"Avatar"`
-//	Email    string `json:"email"`
-//	Password string `json:"Password"`
-//	Status   int    `json:"Status"`
-//}
 
 func NewUserController() *UserController {
 	return &UserController{}
@@ -60,7 +53,20 @@ func (controller *UserController) Show(ctx *gin.Context) {
 		}
 		logger.Danger(err, "user controller get user err")
 	}
-	//3.返回用户信息
+
+	//3.获取用户角色
+	role, err := enforcer.Enforcer.GetRolesForUser(user.Name)
+	if err != nil {
+		controller.ResponseJson(ctx, http.StatusForbidden, err.Error(), []string{})
+		return
+	}
+	if len(role) == 0 {
+		controller.ResponseJson(ctx, http.StatusForbidden, "无法获取用户角色信息", []string{})
+		return
+	}
+	user.Role = role[0]
+
+	//4.返回用户信息
 	controller.ResponseJson(ctx, http.StatusOK, "", user)
 }
 

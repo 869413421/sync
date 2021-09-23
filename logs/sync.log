@@ -1,3 +1,20 @@
 ERROR 2021/09/22 22:24:17 logger.go:49: Error 1205: Lock wait timeout exceeded; try restarting transaction model permission update error
 ERROR 2021/09/22 22:37:40 logger.go:49: WHERE conditions required model permission update error
 ERROR 2021/09/22 22:37:51 logger.go:49: WHERE conditions required model permission update error
+ERROR 2021/09/23 15:46:24 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 15:54:01 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 15:57:06 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 15:57:06 logger.go:49: invalid field found for struct sync/pkg/model/user.User's field CasbinRule: define a valid foreign key for relations or implement the Valuer/Scanner interface user controller get user err
+ERROR 2021/09/23 16:04:09 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:07:48 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:08:30 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:09:03 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:09:19 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:11:03 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:14:17 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:14:25 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:15:43 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:15:47 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:16:03 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:16:40 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error
+ERROR 2021/09/23 16:16:43 logger.go:49: strconv.Atoi: parsing "undefined": invalid syntax StringToInt Error

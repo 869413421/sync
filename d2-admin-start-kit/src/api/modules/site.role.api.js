@@ -3,10 +3,11 @@ export default ({ request }) => ({
    * @description 获取列表
    * @param {BigInteger} page 登录携带的信息
    */
-  SYS_ROLE_LIST(page) {
+  SYS_ROLE_LIST(page,pageSize = 10) {
     // 接口请求
+    let url = '/role?page=' + page + "&pageSize=" + pageSize
     return request({
-      url: '/role?page=' + page,
+      url: url,
       method: 'get'
     })
   },
@@ -57,15 +58,15 @@ export default ({ request }) => ({
       method: 'delete'
     })
   },
-    /**
-   * @description 角色权限
-   * @param {BigInteger} id ID
-   */
-     SYS_ROLE_PERMISSIONS(id) {
-      // 接口请求
-      return request({
-        url: '/role/' + id+"/permissions",
-        method: 'get'
-      })
-    }
+  /**
+ * @description 角色权限
+ * @param {BigInteger} id ID
+ */
+  SYS_ROLE_PERMISSIONS(id) {
+    // 接口请求
+    return request({
+      url: '/role/' + id + "/permissions",
+      method: 'get'
+    })
+  }
 })

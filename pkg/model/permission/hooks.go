@@ -1,7 +1,6 @@
 package permission
 
 import (
-	"fmt"
 	"gorm.io/gorm"
 	"strings"
 	"sync/pkg/logger"
@@ -12,10 +11,9 @@ import (
 // BeforeSave 保存前模型事件
 func (permission *Permission) BeforeSave(*gorm.DB) (err error) {
 	//1.判断是否有上级
-	fmt.Println(p)
-	if p.ParentId != 0 {
+	if permission.ParentId != 0 {
 		//2.获取上级
-		parent, getError := GetByID(p.ParentId)
+		parent, getError := GetByID(permission.ParentId)
 
 		if getError != nil {
 			logger.Danger(getError, "Permission BeforeSave Error")
@@ -26,7 +24,7 @@ func (permission *Permission) BeforeSave(*gorm.DB) (err error) {
 		//3.构建ids
 		parentIds := parent.ParentIds + "," + types.UInt64ToString(parent.ID)
 		parentIds = strings.Trim(parentIds, ",")
-		p.ParentIds = parentIds
+		permission.ParentIds = parentIds
 	}
 	return
 }

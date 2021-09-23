@@ -38,12 +38,28 @@
           ></el-input>
         </el-form-item>
 
-        <el-form-item label="用户密码" prop="Password" v-show="!edit">
+        <el-form-item label="用户密码" prop="password" v-show="!edit">
           <el-input
             v-model="ruleForm.password"
             placeholder="请输入密码"
             show-password
           ></el-input>
+        </el-form-item>
+
+        <el-form-item label="角色" prop="role">
+          <el-select
+            v-model="ruleForm.role"
+            clearable
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in roleList"
+              :key="item.name"
+              :label="item.name"
+              :value="item.name"
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="用户状态" prop="status">
@@ -113,6 +129,7 @@ export default {
       edit: false,
       uploadPath: "",
       uploadHead: {},
+      roleList: [],
       ruleForm: {
         name: "",
         avatar: "",
@@ -121,6 +138,7 @@ export default {
         email: "",
         created_at: "",
         updated_at: "",
+        role: "",
       },
       rules: {
         name: [
@@ -153,6 +171,7 @@ export default {
         status: [
           { required: true, message: "请选择用户状态", trigger: "blur" },
         ],
+        role: [{ required: true, message: "请选择用户角色", trigger: "blur" }],
         email: [{ validator: checkEmail, trigger: "blur" }],
       },
     };
@@ -163,6 +182,7 @@ export default {
       Authorization: "Bearer " + util.cookies.get("token"),
     };
     this.id = this.$route.params.id;
+    this.getRoleList();
     if (this.id > 0) {
       this.edit = true;
       this.show();
@@ -178,7 +198,7 @@ export default {
     ...mapActions("d2admin/page", ["close"]),
     submitForm(formName) {
       if (this.edit) {
-        this.rules.Password = [];
+        this.rules.password = [];
       }
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -226,6 +246,14 @@ export default {
         console.log(tagName);
         this.close({ tagName });
       }, 2000);
+    },
+    async getRoleList() {
+      const res = await api.SYS_ROLE_LIST(1, 200);
+      this.roleList = res.roles;
+    },
+    changeRole(role) {
+      this.ruleForm.role = role;
+      console.log(this.ruleForm.role)
     },
   },
 };
